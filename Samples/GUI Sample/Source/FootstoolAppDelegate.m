@@ -11,7 +11,6 @@
 #import "CCouchDBServer.h"
 #import "CCouchDBDocument.h"
 #import "CCouchDBDatabase.h"
-#import "CKVOBlockNotificationCenter.h"
 #import "NSArray_ConvenienceExtensions.h"
 
 @implementation FootstoolAppDelegate
@@ -63,45 +62,15 @@ if (serverURL != inServerURL)
 		[self appendStatusFormat:@"Fetched %d databases.", [self.server.databases count]];
 		};
 	[self.server fetchDatabasesWithSuccessHandler:theSuccessHandler failureHandler:[self errorHandler]];
-
 	}
 }
-
 
 #pragma mark -
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-KVOBlock theUpdateSelectedDatabasesBlock = ^(NSString *keyPath, id object, NSDictionary *change, id identifier)
-	{
-	for (CCouchDBDatabase *theDatabase in self.databasesController.selectedObjects)
-		{
-		CouchDBSuccessHandler theSuccessHandler = (CouchDBSuccessHandler)^(NSArray *inDocuments)
-			{
-			[self appendStatusFormat:@"All documents fetched."];
-			dispatch_async(dispatch_get_main_queue(), ^{ self.documents = inDocuments;  NSLog(@"%@", self.documents); });	
-			};
-		[theDatabase fetchAllDocumentsWithSuccessHandler:theSuccessHandler failureHandler:[self errorHandler]];
-		}
-	};
-[self.databasesController addKVOBlock:theUpdateSelectedDatabasesBlock forKeyPath:@"selection" options:0 identifier:@"TODO_1"];
-
-// #############################################################################
-
-KVOBlock theUpdateSelectedDocumentsBlock = ^(NSString *keyPath, id object, NSDictionary *change, id identifier)
-	{
-	for (CCouchDBDocument *theDocument in self.documentsController.selectedObjects)
-		{
-		CouchDBSuccessHandler theSuccessHandler = (CouchDBSuccessHandler)^(CCouchDBDocument *inDocument)
-			{
-			[self appendStatusFormat:@"Document fetched: %@", inDocument.identifier];
-			};
-		[theDocument.database fetchDocumentForIdentifier:theDocument.identifier successHandler:theSuccessHandler failureHandler:[self errorHandler]];
-		}
-	};
-[self.documentsController addKVOBlock:theUpdateSelectedDocumentsBlock forKeyPath:@"selection" options:0 identifier:@"TODO_1"];
-
-// #############################################################################
+[self.databasesController addObserver:self forKeyPath:@"selection" options:0 context:NULL];
+[self.documentsController addObserver:self forKeyPath:@"selection" options:0 context:NULL];
 }
 
 - (CouchDBFailureHandler)errorHandler
@@ -180,6 +149,35 @@ for (CCouchDBDocument *theDocument in self.documentsController.selectedObjects)
 		[self appendStatusFormat:@"Deleting document '%@' done.", theDocument.identifier];
 		};
 	[theDocument.database deleteDocument:theDocument successHandler:theHandler failureHandler:[self errorHandler]];
+	}
+}
+
+#pragma mark -
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context;
+{
+if (object == self.databasesController)
+	{
+	for (CCouchDBDatabase *theDatabase in self.databasesController.selectedObjects)
+		{
+		CouchDBSuccessHandler theSuccessHandler = (CouchDBSuccessHandler)^(NSArray *inDocuments)
+			{
+			[self appendStatusFormat:@"All documents fetched."];
+			dispatch_async(dispatch_get_main_queue(), ^{ self.documents = inDocuments;  NSLog(@"%@", self.documents); });	
+			};
+		[theDatabase fetchAllDocumentsWithSuccessHandler:theSuccessHandler failureHandler:[self errorHandler]];
+		}
+	}
+else if (object == self.documentsController)
+	{
+	for (CCouchDBDocument *theDocument in self.documentsController.selectedObjects)
+		{
+		CouchDBSuccessHandler theSuccessHandler = (CouchDBSuccessHandler)^(CCouchDBDocument *inDocument)
+			{
+			[self appendStatusFormat:@"Document fetched: %@", inDocument.identifier];
+			};
+		[theDocument.database fetchDocumentForIdentifier:theDocument.identifier successHandler:theSuccessHandler failureHandler:[self errorHandler]];
+		}
 	}
 }
 

@@ -60,8 +60,6 @@
 		45291C8A117D37D800E1DAED /* NSObject_InvocationGrabberExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291C39117D37D800E1DAED /* NSObject_InvocationGrabberExtensions.m */; };
 		45291C8B117D37D800E1DAED /* CBundleResourceURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291C3D117D37D800E1DAED /* CBundleResourceURLProtocol.m */; };
 		45291C8C117D37D800E1DAED /* CNumberToStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291C40117D37D800E1DAED /* CNumberToStringValueTransformer.m */; };
-		45291DA1117D3D0800E1DAED /* CKVOBlockNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291D75117D3D0800E1DAED /* CKVOBlockNotificationCenter.m */; };
-		45291DA2117D3D0800E1DAED /* CKVOBlockNotificationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291D77117D3D0800E1DAED /* CKVOBlockNotificationHelper.m */; };
 		455C884F117F52A1005E0B84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455C883D117F52A1005E0B84 /* InfoPlist.strings */; };
 		455C8850117F52A1005E0B84 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C883F117F52A1005E0B84 /* MainMenu.xib */; };
 		455C8852117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 455C8844117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m */; };
@@ -185,10 +183,6 @@
 		45291C3D117D37D800E1DAED /* CBundleResourceURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBundleResourceURLProtocol.m; sourceTree = "<group>"; };
 		45291C3F117D37D800E1DAED /* CNumberToStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNumberToStringValueTransformer.h; sourceTree = "<group>"; };
 		45291C40117D37D800E1DAED /* CNumberToStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNumberToStringValueTransformer.m; sourceTree = "<group>"; };
-		45291D74117D3D0800E1DAED /* CKVOBlockNotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKVOBlockNotificationCenter.h; sourceTree = "<group>"; };
-		45291D75117D3D0800E1DAED /* CKVOBlockNotificationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKVOBlockNotificationCenter.m; sourceTree = "<group>"; };
-		45291D76117D3D0800E1DAED /* CKVOBlockNotificationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKVOBlockNotificationHelper.h; sourceTree = "<group>"; };
-		45291D77117D3D0800E1DAED /* CKVOBlockNotificationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKVOBlockNotificationHelper.m; sourceTree = "<group>"; };
 		455AD014117E2ABA00ABAAA3 /* CouchDBClientTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouchDBClientTypes.h; sourceTree = "<group>"; };
 		455C883E117F52A1005E0B84 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		455C8840117F52A1005E0B84 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -480,22 +474,9 @@
 			path = ValueTransformers;
 			sourceTree = "<group>";
 		};
-		45291D4F117D3D0800E1DAED /* kvoblocknotificationcenter */ = {
-			isa = PBXGroup;
-			children = (
-				45291D74117D3D0800E1DAED /* CKVOBlockNotificationCenter.h */,
-				45291D75117D3D0800E1DAED /* CKVOBlockNotificationCenter.m */,
-				45291D76117D3D0800E1DAED /* CKVOBlockNotificationHelper.h */,
-				45291D77117D3D0800E1DAED /* CKVOBlockNotificationHelper.m */,
-			);
-			name = kvoblocknotificationcenter;
-			path = ../../Externals/kvoblocknotificationcenter;
-			sourceTree = "<group>";
-		};
 		455C8832117F5285005E0B84 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
-				45291D4F117D3D0800E1DAED /* kvoblocknotificationcenter */,
 				455C8835117F528E005E0B84 /* touchcode */,
 			);
 			name = Externals;
@@ -654,8 +635,6 @@
 				45291C8A117D37D800E1DAED /* NSObject_InvocationGrabberExtensions.m in Sources */,
 				45291C8B117D37D800E1DAED /* CBundleResourceURLProtocol.m in Sources */,
 				45291C8C117D37D800E1DAED /* CNumberToStringValueTransformer.m in Sources */,
-				45291DA1117D3D0800E1DAED /* CKVOBlockNotificationCenter.m in Sources */,
-				45291DA2117D3D0800E1DAED /* CKVOBlockNotificationHelper.m in Sources */,
 				455C8852117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m in Sources */,
 				455C8853117F52A1005E0B84 /* CURLToStringValueTransformer.m in Sources */,
 				455C8854117F52A1005E0B84 /* FootstoolAppDelegate.m in Sources */,
