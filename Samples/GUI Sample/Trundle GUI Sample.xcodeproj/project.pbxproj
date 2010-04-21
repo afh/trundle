@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
-		256AC3DA0F4B6AC300CF3369 /* FootstoolAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* FootstoolAppDelegate.m */; };
-		45287C8E117E533E0002EE7C /* NSDictionary_MoreBlockExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45287C8D117E533E0002EE7C /* NSDictionary_MoreBlockExtensions.m */; };
-		45287D42117E58A40002EE7C /* CURLToStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 45287D41117E58A40002EE7C /* CURLToStringValueTransformer.m */; };
 		45291AF1117D37A900E1DAED /* CCouchDBURLOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291ADF117D37A900E1DAED /* CCouchDBURLOperation.m */; };
 		45291AF2117D37A900E1DAED /* CouchDBClientConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291AE1117D37A900E1DAED /* CouchDBClientConstants.m */; };
 		45291AF3117D37A900E1DAED /* CCouchDBAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291AE4117D37A900E1DAED /* CCouchDBAttachment.m */; };
@@ -66,28 +62,22 @@
 		45291C8C117D37D800E1DAED /* CNumberToStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291C40117D37D800E1DAED /* CNumberToStringValueTransformer.m */; };
 		45291DA1117D3D0800E1DAED /* CKVOBlockNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291D75117D3D0800E1DAED /* CKVOBlockNotificationCenter.m */; };
 		45291DA2117D3D0800E1DAED /* CKVOBlockNotificationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 45291D77117D3D0800E1DAED /* CKVOBlockNotificationHelper.m */; };
-		455AD13E117E49B900ABAAA3 /* NSArray_ConvenienceExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 455AD13D117E49B900ABAAA3 /* NSArray_ConvenienceExtensions.m */; };
-		45C707BB117D43ED0083F45C /* CDictionaryToJSONStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 45C707BA117D43ED0083F45C /* CDictionaryToJSONStringValueTransformer.m */; };
-		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
-		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		455C884F117F52A1005E0B84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455C883D117F52A1005E0B84 /* InfoPlist.strings */; };
+		455C8850117F52A1005E0B84 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C883F117F52A1005E0B84 /* MainMenu.xib */; };
+		455C8852117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 455C8844117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m */; };
+		455C8853117F52A1005E0B84 /* CURLToStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 455C8846117F52A1005E0B84 /* CURLToStringValueTransformer.m */; };
+		455C8854117F52A1005E0B84 /* FootstoolAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 455C8848117F52A1005E0B84 /* FootstoolAppDelegate.m */; };
+		455C8855117F52A1005E0B84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 455C8849117F52A1005E0B84 /* main.m */; };
+		455C8856117F52A1005E0B84 /* NSArray_ConvenienceExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 455C884B117F52A1005E0B84 /* NSArray_ConvenienceExtensions.m */; };
+		455C8857117F52A1005E0B84 /* NSDictionary_MoreBlockExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 455C884D117F52A1005E0B84 /* NSDictionary_MoreBlockExtensions.m */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
-		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		256AC3D80F4B6AC300CF3369 /* FootstoolAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootstoolAppDelegate.h; sourceTree = "<group>"; };
-		256AC3D90F4B6AC300CF3369 /* FootstoolAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FootstoolAppDelegate.m; sourceTree = "<group>"; };
-		256AC3F00F4B6AF500CF3369 /* Footstool_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Footstool_Prefix.pch; sourceTree = "<group>"; };
-		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		45287C8C117E533E0002EE7C /* NSDictionary_MoreBlockExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_MoreBlockExtensions.h; sourceTree = "<group>"; };
-		45287C8D117E533E0002EE7C /* NSDictionary_MoreBlockExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_MoreBlockExtensions.m; sourceTree = "<group>"; };
-		45287D40117E58A40002EE7C /* CURLToStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CURLToStringValueTransformer.h; sourceTree = "<group>"; };
-		45287D41117E58A40002EE7C /* CURLToStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CURLToStringValueTransformer.m; sourceTree = "<group>"; };
 		45291ADE117D37A900E1DAED /* CCouchDBURLOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCouchDBURLOperation.h; sourceTree = "<group>"; };
 		45291ADF117D37A900E1DAED /* CCouchDBURLOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCouchDBURLOperation.m; sourceTree = "<group>"; };
 		45291AE0117D37A900E1DAED /* CouchDBClientConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouchDBClientConstants.h; sourceTree = "<group>"; };
@@ -200,12 +190,22 @@
 		45291D76117D3D0800E1DAED /* CKVOBlockNotificationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKVOBlockNotificationHelper.h; sourceTree = "<group>"; };
 		45291D77117D3D0800E1DAED /* CKVOBlockNotificationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKVOBlockNotificationHelper.m; sourceTree = "<group>"; };
 		455AD014117E2ABA00ABAAA3 /* CouchDBClientTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouchDBClientTypes.h; sourceTree = "<group>"; };
-		455AD13C117E49B900ABAAA3 /* NSArray_ConvenienceExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ConvenienceExtensions.h; sourceTree = "<group>"; };
-		455AD13D117E49B900ABAAA3 /* NSArray_ConvenienceExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArray_ConvenienceExtensions.m; sourceTree = "<group>"; };
-		45C707B9117D43ED0083F45C /* CDictionaryToJSONStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDictionaryToJSONStringValueTransformer.h; sourceTree = "<group>"; };
-		45C707BA117D43ED0083F45C /* CDictionaryToJSONStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDictionaryToJSONStringValueTransformer.m; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Footstool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Footstool-Info.plist"; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Footstool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Footstool.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		455C883E117F52A1005E0B84 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		455C8840117F52A1005E0B84 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		455C8841117F52A1005E0B84 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		455C8843117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDictionaryToJSONStringValueTransformer.h; sourceTree = "<group>"; };
+		455C8844117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDictionaryToJSONStringValueTransformer.m; sourceTree = "<group>"; };
+		455C8845117F52A1005E0B84 /* CURLToStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CURLToStringValueTransformer.h; sourceTree = "<group>"; };
+		455C8846117F52A1005E0B84 /* CURLToStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CURLToStringValueTransformer.m; sourceTree = "<group>"; };
+		455C8847117F52A1005E0B84 /* FootstoolAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootstoolAppDelegate.h; sourceTree = "<group>"; };
+		455C8848117F52A1005E0B84 /* FootstoolAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FootstoolAppDelegate.m; sourceTree = "<group>"; };
+		455C8849117F52A1005E0B84 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		455C884A117F52A1005E0B84 /* NSArray_ConvenienceExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ConvenienceExtensions.h; sourceTree = "<group>"; };
+		455C884B117F52A1005E0B84 /* NSArray_ConvenienceExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArray_ConvenienceExtensions.m; sourceTree = "<group>"; };
+		455C884C117F52A1005E0B84 /* NSDictionary_MoreBlockExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_MoreBlockExtensions.h; sourceTree = "<group>"; };
+		455C884D117F52A1005E0B84 /* NSDictionary_MoreBlockExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_MoreBlockExtensions.m; sourceTree = "<group>"; };
+		455C884E117F52A1005E0B84 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* Trundle GUI Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Trundle GUI Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,23 +220,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		080E96DDFE201D6D7F000001 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				256AC3D80F4B6AC300CF3369 /* FootstoolAppDelegate.h */,
-				256AC3D90F4B6AC300CF3369 /* FootstoolAppDelegate.m */,
-				45C707B9117D43ED0083F45C /* CDictionaryToJSONStringValueTransformer.h */,
-				45C707BA117D43ED0083F45C /* CDictionaryToJSONStringValueTransformer.m */,
-				455AD13C117E49B900ABAAA3 /* NSArray_ConvenienceExtensions.h */,
-				455AD13D117E49B900ABAAA3 /* NSArray_ConvenienceExtensions.m */,
-				45287C8C117E533E0002EE7C /* NSDictionary_MoreBlockExtensions.h */,
-				45287C8D117E533E0002EE7C /* NSDictionary_MoreBlockExtensions.m */,
-				45287D40117E58A40002EE7C /* CURLToStringValueTransformer.h */,
-				45287D41117E58A40002EE7C /* CURLToStringValueTransformer.m */,
-			);
-			name = Classes;
-			sourceTree = "<group>";
-		};
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,7 +241,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* Footstool.app */,
+				8D1107320486CEB800E47090 /* Trundle GUI Sample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -266,36 +249,14 @@
 		29B97314FDCFA39411CA2CEA /* Footstool */ = {
 			isa = PBXGroup;
 			children = (
-				080E96DDFE201D6D7F000001 /* Classes */,
+				455C883C117F52A1005E0B84 /* Resources */,
+				455C8842117F52A1005E0B84 /* Source */,
 				45291ADD117D37A900E1DAED /* Source */,
-				45291D4F117D3D0800E1DAED /* kvoblocknotificationcenter */,
-				45291AFC117D37CD00E1DAED /* TouchJSON */,
-				45291BD2117D37D700E1DAED /* Support */,
-				29B97315FDCFA39411CA2CEA /* Other Sources */,
-				29B97317FDCFA39411CA2CEA /* Resources */,
+				455C8832117F5285005E0B84 /* Externals */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
 			name = Footstool;
-			sourceTree = "<group>";
-		};
-		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
-			isa = PBXGroup;
-			children = (
-				256AC3F00F4B6AF500CF3369 /* Footstool_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
-			);
-			name = "Other Sources";
-			sourceTree = "<group>";
-		};
-		29B97317FDCFA39411CA2CEA /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				8D1107310486CEB800E47090 /* Footstool-Info.plist */,
-				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
@@ -334,7 +295,7 @@
 				45291B15117D37CD00E1DAED /* Source */,
 			);
 			name = TouchJSON;
-			path = ../Externals/touchcode/TouchJSON;
+			path = ../../Externals/touchcode/TouchJSON;
 			sourceTree = SOURCE_ROOT;
 		};
 		45291B15117D37CD00E1DAED /* Source */ = {
@@ -386,7 +347,7 @@
 				45291BD3117D37D700E1DAED /* Common */,
 			);
 			name = Support;
-			path = ../Externals/touchcode/Support;
+			path = ../../Externals/touchcode/Support;
 			sourceTree = SOURCE_ROOT;
 		};
 		45291BD3117D37D700E1DAED /* Common */ = {
@@ -528,15 +489,62 @@
 				45291D77117D3D0800E1DAED /* CKVOBlockNotificationHelper.m */,
 			);
 			name = kvoblocknotificationcenter;
-			path = ../Externals/kvoblocknotificationcenter;
+			path = ../../Externals/kvoblocknotificationcenter;
+			sourceTree = "<group>";
+		};
+		455C8832117F5285005E0B84 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				45291D4F117D3D0800E1DAED /* kvoblocknotificationcenter */,
+				455C8835117F528E005E0B84 /* touchcode */,
+			);
+			name = Externals;
+			sourceTree = "<group>";
+		};
+		455C8835117F528E005E0B84 /* touchcode */ = {
+			isa = PBXGroup;
+			children = (
+				45291AFC117D37CD00E1DAED /* TouchJSON */,
+				45291BD2117D37D700E1DAED /* Support */,
+			);
+			name = touchcode;
+			sourceTree = "<group>";
+		};
+		455C883C117F52A1005E0B84 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				455C883D117F52A1005E0B84 /* InfoPlist.strings */,
+				455C883F117F52A1005E0B84 /* MainMenu.xib */,
+				455C8841117F52A1005E0B84 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		455C8842117F52A1005E0B84 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				455C8843117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.h */,
+				455C8844117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m */,
+				455C8845117F52A1005E0B84 /* CURLToStringValueTransformer.h */,
+				455C8846117F52A1005E0B84 /* CURLToStringValueTransformer.m */,
+				455C8847117F52A1005E0B84 /* FootstoolAppDelegate.h */,
+				455C8848117F52A1005E0B84 /* FootstoolAppDelegate.m */,
+				455C8849117F52A1005E0B84 /* main.m */,
+				455C884A117F52A1005E0B84 /* NSArray_ConvenienceExtensions.h */,
+				455C884B117F52A1005E0B84 /* NSArray_ConvenienceExtensions.m */,
+				455C884C117F52A1005E0B84 /* NSDictionary_MoreBlockExtensions.h */,
+				455C884D117F52A1005E0B84 /* NSDictionary_MoreBlockExtensions.m */,
+				455C884E117F52A1005E0B84 /* Prefix.pch */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* Footstool */ = {
+		8D1107260486CEB800E47090 /* GUI Sample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Footstool" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "GUI Sample" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -546,10 +554,10 @@
 			);
 			dependencies = (
 			);
-			name = Footstool;
+			name = "GUI Sample";
 			productInstallPath = "$(HOME)/Applications";
 			productName = Footstool;
-			productReference = 8D1107320486CEB800E47090 /* Footstool.app */;
+			productReference = 8D1107320486CEB800E47090 /* Trundle GUI Sample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -557,7 +565,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Footstool" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Trundle GUI Sample" */;
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -571,7 +579,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* Footstool */,
+				8D1107260486CEB800E47090 /* GUI Sample */,
 			);
 		};
 /* End PBXProject section */
@@ -581,8 +589,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				455C884F117F52A1005E0B84 /* InfoPlist.strings in Resources */,
+				455C8850117F52A1005E0B84 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,8 +601,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				256AC3DA0F4B6AC300CF3369 /* FootstoolAppDelegate.m in Sources */,
 				45291AF1117D37A900E1DAED /* CCouchDBURLOperation.m in Sources */,
 				45291AF2117D37A900E1DAED /* CouchDBClientConstants.m in Sources */,
 				45291AF3117D37A900E1DAED /* CCouchDBAttachment.m in Sources */,
@@ -650,28 +656,30 @@
 				45291C8C117D37D800E1DAED /* CNumberToStringValueTransformer.m in Sources */,
 				45291DA1117D3D0800E1DAED /* CKVOBlockNotificationCenter.m in Sources */,
 				45291DA2117D3D0800E1DAED /* CKVOBlockNotificationHelper.m in Sources */,
-				45C707BB117D43ED0083F45C /* CDictionaryToJSONStringValueTransformer.m in Sources */,
-				455AD13E117E49B900ABAAA3 /* NSArray_ConvenienceExtensions.m in Sources */,
-				45287C8E117E533E0002EE7C /* NSDictionary_MoreBlockExtensions.m in Sources */,
-				45287D42117E58A40002EE7C /* CURLToStringValueTransformer.m in Sources */,
+				455C8852117F52A1005E0B84 /* CDictionaryToJSONStringValueTransformer.m in Sources */,
+				455C8853117F52A1005E0B84 /* CURLToStringValueTransformer.m in Sources */,
+				455C8854117F52A1005E0B84 /* FootstoolAppDelegate.m in Sources */,
+				455C8855117F52A1005E0B84 /* main.m in Sources */,
+				455C8856117F52A1005E0B84 /* NSArray_ConvenienceExtensions.m in Sources */,
+				455C8857117F52A1005E0B84 /* NSDictionary_MoreBlockExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+		455C883D117F52A1005E0B84 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				089C165DFE840E0CC02AAC07 /* English */,
+				455C883E117F52A1005E0B84 /* English */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+		455C883F117F52A1005E0B84 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1DDD58150DA1D0A300B32029 /* English */,
+				455C8840117F52A1005E0B84 /* English */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -689,10 +697,10 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Footstool_Prefix.pch;
-				INFOPLIST_FILE = "Footstool-Info.plist";
+				GCC_PREFIX_HEADER = Source/Prefix.pch;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Footstool;
+				PRODUCT_NAME = "Trundle GUI Sample";
 			};
 			name = Debug;
 		};
@@ -703,10 +711,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Footstool_Prefix.pch;
-				INFOPLIST_FILE = "Footstool-Info.plist";
+				GCC_PREFIX_HEADER = Source/Prefix.pch;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Footstool;
+				PRODUCT_NAME = "Trundle GUI Sample";
 			};
 			name = Release;
 		};
@@ -739,7 +747,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Footstool" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "GUI Sample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
@@ -748,7 +756,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Footstool" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Trundle GUI Sample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
