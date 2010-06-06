@@ -1,0 +1,3 @@
+[submodule "Externals/touchcode"]
+	path = Externals/touchcode
+	url = git@github.com:schwa/touchcode.git
