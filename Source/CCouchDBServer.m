@@ -51,6 +51,7 @@ if ((self = [super init]) != NULL)
 	if ([URL.path length] == 0)
 		URL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@/", [inURL absoluteString]]];
 		
+//	operationQueue = [[NSOperationQueue defaultOperationQueue] retain];
 	operationQueue = [[NSOperationQueue mainQueue] retain];
 	}
 return(self);
@@ -161,9 +162,8 @@ theOperation.completionBlock = ^(void) {
 		}
 	[self didChangeValueForKey:@"databases"];
 
-	#warning TODO
  	if (inSuccessHandler)
-		inSuccessHandler(NULL);
+		inSuccessHandler([self.databasesByName allValues]);
 	};
 
 [self.operationQueue addOperation:theOperation];

@@ -10,6 +10,7 @@
 
 #import "CJSONDeserializer.h"
 #import "CouchDBClientConstants.h"
+#import "NSError_CouchDBExtensions.h"
 
 @implementation CCouchDBURLOperation
 
@@ -42,22 +43,13 @@ if (theError == NULL)
 	NSInteger theStatusCode = theHTTPResponse.statusCode;
 	if (theJSON == NULL || theStatusCode < 200 || theStatusCode >= 300)
 		{
-		NSMutableDictionary *theUserInfo = [NSMutableDictionary dictionary];
-		
-		if (theError != NULL)
-			[theUserInfo setObject:theError forKey:NSUnderlyingErrorKey];
-		if (theHTTPResponse)
-			[theUserInfo setObject:theHTTPResponse forKey:@"Response"];
-		if ([theJSON objectForKey:@"reason"] != NULL)
-			[theUserInfo setObject:[theJSON objectForKey:@"reason"] forKey:NSLocalizedDescriptionKey];
-		
-		theError = [NSError errorWithDomain:kCouchErrorDomain code:CouchDBErrorCode_ServerError userInfo:theUserInfo];
+		theError = [NSError errorWithCouchDBURLResponse:self.response JSONDictionary:theJSON];
 		}
 	}
 
 if (theError != NULL)
 	{
-	[self didFail:theError];
+	[self didFailWithError:theError];
 	}
 else
 	{

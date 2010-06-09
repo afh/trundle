@@ -10,6 +10,9 @@
 
 #import "CouchDBClientTypes.h"
 
+#warning TODO
+#define NSCache NSMutableDictionary
+
 @class CCouchDBServer;
 @class CCouchDBDocument;
 

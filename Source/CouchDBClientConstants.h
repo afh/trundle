@@ -13,6 +13,7 @@ extern NSString *kCouchErrorDomain /* = @"CouchErrorDomain" */;
 typedef enum {
 	CouchDBErrorCode_ContentTypeNotJSON = -100,
 	CouchDBErrorCode_ServerError = -101,
+	CouchDBErrorCode_NoDatabase = -200,
 	} ECouchDBErrorCode;
 
 extern NSString *kContentTypeJSON /* = @"application/json" */;

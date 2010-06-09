@@ -135,7 +135,6 @@ for (CCouchDBDatabase *theDatabase in self.databasesController.selectedObjects)
 		};
 	[theDatabase createDocument:[NSDictionary dictionary] successHandler:theSuccessHandler failureHandler:self.errorHandler];
 	}
-
 }
 
 - (IBAction)removeDocument:(id)inSender
