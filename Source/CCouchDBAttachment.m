@@ -11,4 +11,12 @@
 
 @implementation CCouchDBAttachment
 
+- (void)dealloc
+{
+
+//
+[super dealloc];
+}
+
+
 @end

@@ -10,11 +10,9 @@
 
 #import "CouchDBClientTypes.h"
 
-#warning TODO
-#define NSCache NSMutableDictionary
-
 @class CCouchDBServer;
 @class CCouchDBDocument;
+@class CURLOperation;
 
 @interface CCouchDBDatabase : NSObject {
 	CCouchDBServer *server;
@@ -31,6 +29,9 @@
 @property (readonly, retain) NSCache *cachedDocuments;
 
 - (id)initWithServer:(CCouchDBServer *)inServer name:(NSString *)inName;
+
+- (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 
 - (void)createDocument:(NSDictionary *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 - (void)createDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;

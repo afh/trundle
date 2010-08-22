@@ -8,10 +8,16 @@
 
 #import "CURLOperation.h"
 
+#import "CouchDBClientTypes.h"
+
 @interface CCouchDBURLOperation : CURLOperation {
 	id JSON;
+    CouchDBSuccessHandler successHandler;
+    CouchDBFailureHandler failureHandler;
 }
 
-@property (readwrite, nonatomic, retain)	id JSON;
+@property (readwrite, nonatomic, retain) id JSON;
+@property (readwrite, nonatomic, copy) CouchDBSuccessHandler successHandler;
+@property (readwrite, nonatomic, copy) CouchDBFailureHandler failureHandler;
 
 @end

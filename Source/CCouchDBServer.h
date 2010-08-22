@@ -10,19 +10,21 @@
 
 #import "CouchDBClientTypes.h"
 
+@class CCouchDBSession;
 @class CCouchDBDatabase;
 
 @interface CCouchDBServer : NSObject {
+	CCouchDBSession *session;
 	NSURL *URL;
 	NSMutableDictionary *databasesByName;
-	NSOperationQueue *operationQueue;
 }
 
+@property (readonly, retain) CCouchDBSession *session;
 @property (readonly, retain) NSURL *URL;
 @property (readonly, retain) NSSet *databases;
-@property (readonly, retain) NSOperationQueue *operationQueue;
 
-- (id)initWithURL:(NSURL *)inURL;
+- (id)init;
+- (id)initWithSession:(CCouchDBSession *)inSession URL:(NSURL *)inURL;
 
 - (CCouchDBDatabase *)databaseNamed:(NSString *)inName;
 

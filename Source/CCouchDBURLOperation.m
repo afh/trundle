@@ -14,6 +14,8 @@
 
 @implementation CCouchDBURLOperation
 
+@synthesize successHandler;
+@synthesize failureHandler;
 @synthesize JSON;
 
 - (void)dealloc
@@ -22,6 +24,18 @@
 JSON = NULL;
 //
 [super dealloc];
+}
+
+#pragma mark -
+
+- (void)didFailWithError:(NSError *)inError
+{
+[super didFailWithError:inError];
+//
+if (self.failureHandler != NULL)
+    {
+    self.failureHandler(inError);
+    }
 }
 
 - (void)didFinish
@@ -55,6 +69,11 @@ else
 	{
 	self.JSON = theJSON;
 	[super didFinish];
+    
+    if (self.successHandler)
+        {
+        self.successHandler(theJSON);
+        }
 	}
 }
 

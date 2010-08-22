@@ -8,8 +8,9 @@
 
 #import "CCouchDBDatabase.h"
 
+#import "CCouchDBSession.h"
 #import "CCouchDBServer.h"
-#import "CJSONDataSerializer.h"
+#import "CExtensibleJSONDataSerializer.h"
 #import "CouchDBClientConstants.h"
 #import "CCouchDBDocument.h"
 #import "CCouchDBURLOperation.h"
@@ -32,9 +33,20 @@ return(self);
 
 - (void)dealloc
 {
-#warning TODO
+[server release];
+server = NULL;
+[name release];
+name = NULL;
+[cachedDocuments release];
+cachedDocuments = NULL;
 //
 [super dealloc];
+}
+
+- (CCouchDBSession *)session
+{
+NSAssert(self.server.session != NULL, @"No session!");
+return(self.server.session);
 }
 
 - (NSString *)description
@@ -82,16 +94,16 @@ return([NSString stringWithFormat:@"%@ (%@)", [super description], self.name]);
 
 #pragma mark -
 
-- (void)createDocument:(NSDictionary *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:self.URL];
 theRequest.HTTPMethod = @"POST";
 
-NSData *theData = [[CJSONDataSerializer serializer] serializeDictionary:inDocument];
+NSData *theData = [self.session.serializer serializeDictionary:inDocument error:NULL];
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
 [theRequest setHTTPBody:theData];
 
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -119,19 +131,19 @@ theOperation.completionBlock = ^(void) {
 		inSuccessHandler(theDocument);
 	};
 
-[self.server.operationQueue addOperation:theOperation];
+return(theOperation);
 }
 
-- (void)createDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 {
 NSURL *theURL = [NSURL URLWithString:inIdentifier relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
-NSData *theData = [[CJSONDataSerializer serializer] serializeDictionary:inDocument];
+NSData *theData = [self.session.serializer serializeDictionary:inDocument error:NULL];
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
 [theRequest setHTTPBody:theData];
 
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -157,8 +169,22 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(theDocument);
 	};
+return(theOperation);
+}
 
-[self.server.operationQueue addOperation:theOperation];
+#pragma mark -
+
+- (void)createDocument:(NSDictionary *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+{
+CURLOperation *theOperation = [self operationToCreateDocument:inDocument successHandler:inSuccessHandler failureHandler:inFailureHandler];
+
+[self.session.operationQueue addOperation:theOperation];
+}
+
+- (void)createDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+{
+CURLOperation *theOperation = [self operationToCreateDocument:inDocument identifier:inIdentifier successHandler:inSuccessHandler failureHandler:inFailureHandler];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)fetchAllDocumentsWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
@@ -166,7 +192,7 @@ theOperation.completionBlock = ^(void) {
 NSURL *theURL = [NSURL URLWithString:@"_all_docs" relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -196,7 +222,7 @@ theOperation.completionBlock = ^(void) {
 		inSuccessHandler(theDocuments);
 	};
 
-[self.server.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)fetchDocumentForIdentifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
@@ -204,7 +230,7 @@ theOperation.completionBlock = ^(void) {
 NSURL *theURL = [NSURL URLWithString:inIdentifier relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -226,7 +252,7 @@ theOperation.completionBlock = ^(void) {
 		inSuccessHandler(theDocument);
 	};
 
-[self.server.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)fetchDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
@@ -235,7 +261,7 @@ theOperation.completionBlock = ^(void) {
 NSURL *theURL = inDocument.URL;
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -250,7 +276,7 @@ theOperation.completionBlock = ^(void) {
 		inSuccessHandler(inDocument);
 	};
 
-[self.server.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)updateDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
@@ -258,11 +284,11 @@ theOperation.completionBlock = ^(void) {
 NSURL *theURL = inDocument.URL;
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
-NSData *theData = [[CJSONDataSerializer serializer] serializeDictionary:inDocument.content];
+NSData *theData = [self.session.serializer serializeDictionary:inDocument.content error:NULL];
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
 [theRequest setHTTPBody:theData];
 
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -277,7 +303,7 @@ theOperation.completionBlock = ^(void) {
 		inSuccessHandler(inDocument);
 	};
 
-[self.server.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)deleteDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
@@ -286,7 +312,7 @@ NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"?rev=%@", inDo
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
 
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -301,7 +327,7 @@ theOperation.completionBlock = ^(void) {
 		inSuccessHandler(inDocument);
 	};
 
-[self.server.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 @end

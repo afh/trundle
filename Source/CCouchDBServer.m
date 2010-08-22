@@ -8,6 +8,7 @@
 
 #import "CCouchDBServer.h"
 
+#import "CCouchDBSession.h"
 #import "CCouchDBDatabase.h"
 #import "CouchDBClientConstants.h"
 #import "CCouchDBURLOperation.h"
@@ -21,9 +22,9 @@
 
 @implementation CCouchDBServer
 
+@synthesize session;
 @synthesize URL;
 @synthesize databasesByName;
-@synthesize operationQueue;
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key
 {
@@ -37,36 +38,33 @@ else
 
 - (id)init
 {
-if ((self = [self initWithURL:[NSURL URLWithString:@"http://localhost:5984/"]]) != NULL)
+if ((self = [self initWithSession:NULL URL:[NSURL URLWithString:@"http://localhost:5984/"]]) != NULL)
 	{
 	}
 return(self);
 }
 
-- (id)initWithURL:(NSURL *)inURL;
+- (id)initWithSession:(CCouchDBSession *)inSession URL:(NSURL *)inURL;
 {
 if ((self = [super init]) != NULL)
 	{
+    session = [inSession retain];
 	URL = [inURL retain];
 	if ([URL.path length] == 0)
 		URL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@/", [inURL absoluteString]]];
-		
-//	operationQueue = [[NSOperationQueue defaultOperationQueue] retain];
-	operationQueue = [[NSOperationQueue mainQueue] retain];
 	}
 return(self);
 }
 
 - (void)dealloc
 {
+session = NULL;
+
 [URL release];
 URL = NULL;
 //
 [databasesByName release];
 databasesByName = NULL;
-//
-[operationQueue release];
-operationQueue = NULL;
 //
 [super dealloc];
 }
@@ -79,6 +77,15 @@ return([NSString stringWithFormat:@"%@ (%@)", [super description], self.URL]);
 }
 
 #pragma mark -
+
+- (CCouchDBSession *)session
+{
+if (session == NULL)
+    {
+    session = [[CCouchDBSession alloc] init];
+    }
+return(session);
+}
 
 - (NSSet *)databases
 {
@@ -116,7 +123,7 @@ CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:
 NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -132,7 +139,7 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(theRemoteDatabase);
 	};
-[self.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)fetchDatabasesWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
@@ -140,7 +147,7 @@ theOperation.completionBlock = ^(void) {
 NSURL *theURL = [NSURL URLWithString:@"_all_dbs" relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -166,7 +173,7 @@ theOperation.completionBlock = ^(void) {
 		inSuccessHandler([self.databasesByName allValues]);
 	};
 
-[self.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)fetchDatabaseNamed:(NSString *)inName withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
@@ -175,7 +182,7 @@ CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:
 NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -191,7 +198,7 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(theRemoteDatabase);
 	};
-[self.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)deleteDatabase:(CCouchDBDatabase *)inDatabase withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
@@ -199,7 +206,7 @@ theOperation.completionBlock = ^(void) {
 NSURL *theURL = [NSURL URLWithString:inDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
-CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
 theOperation.completionBlock = ^(void) {
 	if (theOperation.error)
 		{
@@ -215,7 +222,7 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(inDatabase);
 	};
-[self.operationQueue addOperation:theOperation];
+[self.session.operationQueue addOperation:theOperation];
 }
 
 @end
