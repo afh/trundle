@@ -9,7 +9,7 @@
 #import "CCouchDBSession.h"
 
 #import "CCouchDBURLOperation.h"
-#import "CExtensibleJSONDataSerializer.h"
+#import "CFilteringJSONSerializer.h"
 #import "NSDate_InternetDateExtensions.h"
 
 @implementation CCouchDBSession
@@ -52,7 +52,7 @@ return(URLOperationClass);
 {
 if (serializer == NULL) 
     {
-    CExtensibleJSONDataSerializer *theSerializer = [CExtensibleJSONDataSerializer serializer];
+    CFilteringJSONSerializer *theSerializer = [CFilteringJSONSerializer serializer];
     JSONConversionConverter theConverter = ^(id inObject) {
         return((id)[(NSDate *)inObject ISO8601String]);
         };

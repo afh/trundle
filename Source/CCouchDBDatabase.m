@@ -10,7 +10,7 @@
 
 #import "CCouchDBSession.h"
 #import "CCouchDBServer.h"
-#import "CExtensibleJSONDataSerializer.h"
+#import "CFilteringJSONSerializer.h"
 #import "CouchDBClientConstants.h"
 #import "CCouchDBDocument.h"
 #import "CCouchDBURLOperation.h"
