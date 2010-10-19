@@ -104,7 +104,7 @@ NSData *theData = [self.session.serializer serializeDictionary:inDocument error:
 [theRequest setHTTPBody:theData];
 
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
+theOperation.successHandler = ^(id inParameter) {
 	if (theOperation.error)
 		{
 		if (inFailureHandler)
@@ -112,7 +112,7 @@ theOperation.completionBlock = ^(void) {
 		return;
 		}
 	
-	if ([[theOperation.JSON objectForKey:@"ok"] boolValue] == NO)
+	if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
 		{
 		NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
 		if (inFailureHandler)
@@ -120,8 +120,8 @@ theOperation.completionBlock = ^(void) {
 		return;
 		}
 		
-	NSString *theIdentifier = [theOperation.JSON objectForKey:@"id"];
-	NSString *theRevision = [theOperation.JSON objectForKey:@"rev"];
+	NSString *theIdentifier = [inParameter objectForKey:@"id"];
+	NSString *theRevision = [inParameter objectForKey:@"rev"];
 	
 	CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier revision:theRevision] autorelease];
 	[theDocument populateWithJSONDictionary:inDocument];
@@ -144,15 +144,8 @@ NSData *theData = [self.session.serializer serializeDictionary:inDocument error:
 [theRequest setHTTPBody:theData];
 
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-	
-	if ([[theOperation.JSON objectForKey:@"ok"] boolValue] == NO)
+theOperation.successHandler = ^(id inParameter) {
+	if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
 		{
 		NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
 		if (inFailureHandler)
@@ -160,7 +153,7 @@ theOperation.completionBlock = ^(void) {
 		return;
 		}
 
-	NSString *theRevision = [theOperation.JSON objectForKey:@"rev"];
+	NSString *theRevision = [inParameter objectForKey:@"rev"];
 	
 	CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:inIdentifier revision:theRevision] autorelease];
 	[theDocument populateWithJSONDictionary:inDocument];
@@ -193,16 +186,9 @@ NSURL *theURL = [NSURL URLWithString:@"_all_docs" relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-		
+theOperation.successHandler = ^(id inParameter) {
 	NSMutableArray *theDocuments = [NSMutableArray array];
-	for (NSDictionary *theRow in [theOperation.JSON objectForKey:@"rows"])
+	for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])
 		{
 		NSString *theIdentifier = [theRow objectForKey:@"id"];
 		
@@ -221,6 +207,7 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(theDocuments);
 	};
+theOperation.failureHandler = inFailureHandler;
 
 [self.session.operationQueue addOperation:theOperation];
 }
@@ -231,14 +218,7 @@ NSURL *theURL = [NSURL URLWithString:inIdentifier relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-	
+theOperation.successHandler = ^(id inParameter) {
 	CCouchDBDocument *theDocument = [self.cachedDocuments objectForKey:inIdentifier];
 	if (theDocument == NULL)
 		{
@@ -246,35 +226,30 @@ theOperation.completionBlock = ^(void) {
 		[self.cachedDocuments setObject:theDocument forKey:inIdentifier];
 		}
 	
-	[theDocument populateWithJSONDictionary:theOperation.JSON];
+	[theDocument populateWithJSONDictionary:inParameter];
 
 	if (inSuccessHandler)
 		inSuccessHandler(theDocument);
 	};
+theOperation.failureHandler = inFailureHandler;
 
 [self.session.operationQueue addOperation:theOperation];
 }
 
 - (void)fetchDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
-#warning TODO -- this only fetches the latest document (i.e. _rev is ignored). What if we don't want the latest document?
+// TODO -- this only fetches the latest document (i.e. _rev is ignored). What if we don't want the latest document?
 NSURL *theURL = inDocument.URL;
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-		
-	[inDocument populateWithJSONDictionary:theOperation.JSON];
+theOperation.successHandler = ^(id inParameter) {
+	[inDocument populateWithJSONDictionary:inParameter];
 
 	if (inSuccessHandler)
 		inSuccessHandler(inDocument);
 	};
+theOperation.failureHandler = inFailureHandler;
 
 [self.session.operationQueue addOperation:theOperation];
 }
@@ -289,19 +264,13 @@ NSData *theData = [self.session.serializer serializeDictionary:inDocument.conten
 [theRequest setHTTPBody:theData];
 
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-	
-	[inDocument populateWithJSONDictionary:theOperation.JSON];
+theOperation.successHandler = ^(id inParameter) {
+	[inDocument populateWithJSONDictionary:inParameter];
 
 	if (inSuccessHandler)
 		inSuccessHandler(inDocument);
 	};
+theOperation.failureHandler = inFailureHandler;
 
 [self.session.operationQueue addOperation:theOperation];
 }
@@ -313,19 +282,13 @@ NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
 
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-		
+theOperation.successHandler = ^(id inParameter) {
 	[self.cachedDocuments removeObjectForKey:inDocument];
 	
 	if (inSuccessHandler)
 		inSuccessHandler(inDocument);
 	};
+theOperation.failureHandler = inFailureHandler;
 
 [self.session.operationQueue addOperation:theOperation];
 }

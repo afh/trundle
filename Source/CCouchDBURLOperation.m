@@ -28,18 +28,17 @@ JSON = NULL;
 
 #pragma mark -
 
-- (void)didFailWithError:(NSError *)inError
+- (void)start
 {
-[super didFailWithError:inError];
+NSLog(@"START: %@", self);
+[super start];
 //
-if (self.failureHandler != NULL)
-    {
-    self.failureHandler(inError);
-    }
 }
 
 - (void)didFinish
 {
+NSLog(@"DID FINISH: %@", self);
+
 NSHTTPURLResponse *theHTTPResponse = (NSHTTPURLResponse *)self.response;
 
 NSError *theError = NULL;
@@ -57,16 +56,18 @@ if (theError == NULL)
 	NSInteger theStatusCode = theHTTPResponse.statusCode;
 	if (theJSON == NULL || theStatusCode < 200 || theStatusCode >= 300)
 		{
-		theError = [NSError errorWithCouchDBURLResponse:self.response JSONDictionary:theJSON];
+		theError = [NSError couchDBErrorWithURLResponse:self.response JSONDictionary:theJSON];
 		}
 	}
 
 if (theError != NULL)
 	{
+    NSLog(@"DID FAIL: %@", theError);
 	[self didFailWithError:theError];
 	}
 else
 	{
+    NSLog(@"DID FINISH: %@", theJSON);
 	self.JSON = theJSON;
 	[super didFinish];
     
@@ -76,5 +77,23 @@ else
         }
 	}
 }
+
+- (void)didFailWithError:(NSError *)inError
+    {
+    [super didFailWithError:inError];
+
+    id theJSON = [[CJSONDeserializer deserializer] deserialize:self.data error:NULL];
+    NSError *theError = [NSError couchDBErrorWithError:inError JSONDictionary:theJSON];
+    if (theError == NULL)
+        {
+        theError = inError;
+        }
+
+    if (self.failureHandler != NULL)
+        {
+        self.failureHandler(theError);
+        }
+
+    }
 
 @end

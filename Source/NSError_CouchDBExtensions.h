@@ -10,7 +10,8 @@
 
 @interface NSError (NSError_CouchDBExtensions)
 
-+ (NSError *)errorWithCouchDBURLResponse:(NSURLResponse *)inURLResponse JSONDictionary:(NSDictionary *)inJSONDictionary;
++ (NSError *)couchDBErrorWithError:(NSError *)inError JSONDictionary:(NSDictionary *)inJSONDictionary;
++ (NSError *)couchDBErrorWithURLResponse:(NSURLResponse *)inURLResponse JSONDictionary:(NSDictionary *)inJSONDictionary;
 + (NSInteger)errorCodeForCouchDBError:(NSString *)inError;
 
 @end

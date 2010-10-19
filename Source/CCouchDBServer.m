@@ -8,11 +8,13 @@
 
 #import "CCouchDBServer.h"
 
+#import "Asserts.h"
+#import "CJSONDeserializer.h"
+
 #import "CCouchDBSession.h"
 #import "CCouchDBDatabase.h"
 #import "CouchDBClientConstants.h"
 #import "CCouchDBURLOperation.h"
-#import "CJSONDeserializer.h"
 
 @interface CCouchDBServer ()
 @property (readonly, retain) NSMutableDictionary *databasesByName;
@@ -104,7 +106,7 @@ return([NSSet setWithArray:[self.databasesByName allValues]]);
 	}
 }
 
-- (CCouchDBDatabase *)databaseNamed:(NSString *)inName;
+- (CCouchDBDatabase *)databaseNamed:(NSString *)inName
 {
 CCouchDBDatabase *theDatabase = [self.databasesByName objectForKey:inName];
 if (theDatabase == NULL)
@@ -124,14 +126,7 @@ NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-
+theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
 	[self.databasesByName setObject:theRemoteDatabase forKey:inName];
 	[self didChangeValueForKey:@"databasesByName"];
@@ -139,6 +134,7 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(theRemoteDatabase);
 	};
+theOperation.failureHandler = inFailureHandler;
 [self.session.operationQueue addOperation:theOperation];
 }
 
@@ -148,16 +144,9 @@ NSURL *theURL = [NSURL URLWithString:@"_all_dbs" relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-		
+theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databases"];
-	for (NSString *theName in theOperation.JSON)
+	for (NSString *theName in inParameter)
 		{
 		if ([self.databasesByName objectForKey:theName] == NULL)
 			{
@@ -172,6 +161,7 @@ theOperation.completionBlock = ^(void) {
  	if (inSuccessHandler)
 		inSuccessHandler([self.databasesByName allValues]);
 	};
+theOperation.failureHandler = inFailureHandler;
 
 [self.session.operationQueue addOperation:theOperation];
 }
@@ -183,14 +173,7 @@ NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-
+theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
 	[self.databasesByName setObject:theRemoteDatabase forKey:inName];
 	[self didChangeValueForKey:@"databasesByName"];
@@ -198,6 +181,7 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(theRemoteDatabase);
 	};
+theOperation.failureHandler = inFailureHandler;
 [self.session.operationQueue addOperation:theOperation];
 }
 
@@ -207,14 +191,7 @@ NSURL *theURL = [NSURL URLWithString:inDatabase.encodedName relativeToURL:self.U
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
 CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
-theOperation.completionBlock = ^(void) {
-	if (theOperation.error)
-		{
-		if (inFailureHandler)
-			inFailureHandler(theOperation.error);
-		return;
-		}
-
+theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
 	[self.databasesByName removeObjectForKey:inDatabase.name];
 	[self didChangeValueForKey:@"databasesByName"];
@@ -222,6 +199,7 @@ theOperation.completionBlock = ^(void) {
 	if (inSuccessHandler)
 		inSuccessHandler(inDatabase);
 	};
+theOperation.failureHandler = inFailureHandler;
 [self.session.operationQueue addOperation:theOperation];
 }
 
