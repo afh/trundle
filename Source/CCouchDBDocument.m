@@ -9,6 +9,7 @@
 #import "CCouchDBDocument.h"
 
 #import "CouchDBClientConstants.h"
+#import "CCouchDBAttachment.h"
 #import "CCouchDBDatabase.h"
 #import "CCouchDBDocument.h"
 #import "CCouchDBServer.h"
@@ -204,6 +205,40 @@
         }
     }
 
+- (void)addAttachment:(CCouchDBAttachment *)inAttachment
+    {
+    NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"attachment?rev=%@", self.revision] relativeToURL:[self.URL absoluteURL]];
+    NSLog(@"%@", theURL);
+
+    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
+    theRequest.HTTPMethod = @"PUT";
+
+    [theRequest setValue:inAttachment.contentType forHTTPHeaderField:@"Content-Type"];
+    [theRequest setHTTPBody:inAttachment.data];
+
+    CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+    theOperation.successHandler = ^(id inParameter) {
+        if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
+            {
+            NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
+            NSLog(@"%@", theError);
+//            if (inFailureHandler)
+//                inFailureHandler(theError);
+            return;
+            }
+            
+//        NSString *theIdentifier = [inParameter objectForKey:@"id"];
+//        NSString *theRevision = [inParameter objectForKey:@"rev"];
+        
+//        if (inSuccessHandler)
+//            inSuccessHandler(theDocument);
+        };
+
+//    return(theOperation);
+    
+    [self.session.operationQueue addOperation:theOperation];
+
+    }
 
 
 @end

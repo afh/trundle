@@ -8,9 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+@class CCouchDBDocument;
+
 @interface CCouchDBAttachment : NSObject {
+    CCouchDBDocument *document;
+    NSString *identifier;
 	NSString *contentType;
 	NSData *data;
 }
+
+@property (readwrite, nonatomic, assign) CCouchDBDocument *document;
+@property (readwrite, nonatomic, retain) NSString *identifier;
+@property (readwrite, nonatomic, retain) NSString *contentType;
+@property (readwrite, nonatomic, retain) NSData *data;
+
+- (id)initWithIdentifier:(NSString *)inIdentifier contentType:(NSString *)inContentType data:(NSData *)inData;
 
 @end

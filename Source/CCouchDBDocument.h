@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class CCouchDBAttachment;
 @class CCouchDBDatabase;
 
 @interface CCouchDBDocument : NSObject /*<NSDiscardableContent>*/ {
@@ -30,5 +31,7 @@
 
 - (void)populateWithJSONDictionary:(NSDictionary *)inDictionary;
 - (NSDictionary *)asJSONDictionary;
+
+- (void)addAttachment:(CCouchDBAttachment *)inAttachment;
 
 @end

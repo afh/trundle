@@ -8,15 +8,34 @@
 
 #import "CCouchDBAttachment.h"
 
-
 @implementation CCouchDBAttachment
 
-- (void)dealloc
-{
+@synthesize document;
+@synthesize identifier;
+@synthesize contentType;
+@synthesize data;
 
-//
-[super dealloc];
+- (id)initWithIdentifier:(NSString *)inIdentifier contentType:(NSString *)inContentType data:(NSData *)inData;
+{
+if ((self = [super init]) != NULL)
+    {
+    identifier = [inIdentifier retain];
+    contentType = [inContentType retain];
+    data = [inData retain];
+    }
+return(self);
 }
 
+- (void)dealloc
+    {
+    [identifier release];
+    identifier = NULL;
+    [contentType release];
+    contentType = NULL;
+    [data release];
+    data = NULL;
+    //
+    [super dealloc];
+    }
 
 @end
