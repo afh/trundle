@@ -207,8 +207,7 @@
 
 - (void)addAttachment:(CCouchDBAttachment *)inAttachment
     {
-    NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"attachment?rev=%@", self.revision] relativeToURL:[self.URL absoluteURL]];
-    NSLog(@"%@", theURL);
+    NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?rev=%@", inAttachment.identifier, self.revision] relativeToURL:[self.URL absoluteURL]];
 
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"PUT";
@@ -220,8 +219,7 @@
     theOperation.successHandler = ^(id inParameter) {
         if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
             {
-            NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
-            NSLog(@"%@", theError);
+//            NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
 //            if (inFailureHandler)
 //                inFailureHandler(theError);
             return;
