@@ -30,15 +30,12 @@ JSON = NULL;
 
 - (void)start
 {
-NSLog(@"START: %@", self);
 [super start];
 //
 }
 
 - (void)didFinish
 {
-NSLog(@"DID FINISH: %@", self);
-
 NSHTTPURLResponse *theHTTPResponse = (NSHTTPURLResponse *)self.response;
 
 NSError *theError = NULL;
@@ -62,26 +59,23 @@ if (theError == NULL)
 
 if (theError != NULL)
 	{
-    NSLog(@"DID FAIL: %@", theError);
 	[self didFailWithError:theError];
 	}
 else
 	{
-    NSLog(@"DID FINISH: %@", theJSON);
 	self.JSON = theJSON;
-	[super didFinish];
     
     if (self.successHandler)
         {
         self.successHandler(theJSON);
         }
+
+	[super didFinish];
 	}
 }
 
 - (void)didFailWithError:(NSError *)inError
     {
-    [super didFailWithError:inError];
-
     id theJSON = [[CJSONDeserializer deserializer] deserialize:self.data error:NULL];
     NSError *theError = [NSError couchDBErrorWithError:inError JSONDictionary:theJSON];
     if (theError == NULL)
@@ -94,6 +88,7 @@ else
         self.failureHandler(theError);
         }
 
+    [super didFailWithError:inError];
     }
 
 @end
