@@ -11,12 +11,15 @@
 #import "CCouchDBURLOperation.h"
 #import "CFilteringJSONSerializer.h"
 #import "NSDate_InternetDateExtensions.h"
+#import "CJSONDeserializer.h"
+#import "CJSONSerializedData.h"
 
 @implementation CCouchDBSession
 
 @synthesize operationQueue;
 @synthesize URLOperationClass;
 @synthesize serializer;
+@synthesize deserializer;
 
 - (void)dealloc
 {
@@ -24,6 +27,12 @@
 [operationQueue waitUntilAllOperationsAreFinished];
 [operationQueue release];
 operationQueue = NULL;
+//
+[serializer release];
+serializer = NULL;
+//
+[deserializer release];
+deserializer = NULL;
 //
 [super dealloc];
 }
@@ -53,22 +62,36 @@ return(URLOperationClass);
 if (serializer == NULL) 
     {
     CFilteringJSONSerializer *theSerializer = [CFilteringJSONSerializer serializer];
-    JSONConversionConverter theConverter = ^(id inObject) {
-        return((id)[(NSDate *)inObject ISO8601String]);
-        };
-    theSerializer.convertersByName = [NSDictionary dictionaryWithObject:theConverter forKey:@"date"];
-    JSONConversionTest theTest = ^(id inObject) {
-        NSString *theName = NULL;
-        if ([inObject isKindOfClass:[NSDate class]])
-            {
-            theName = @"date";
-            }
-        return(theName);
-        };
-    theSerializer.tests = [NSSet setWithObject:theTest];
+    theSerializer.convertersByName = [NSDictionary dictionaryWithObjectsAndKeys:
+        [[^(NSDate *inDate) { return((id)[inDate ISO8601String]); } copy] autorelease], @"date",
+        [[^(CJSONSerializedData *inObject) { return((id)inObject.data); } copy] autorelease], @"JSONSerializedData",
+        NULL];
+    theSerializer.tests = [NSSet setWithObjects:
+        [[^(id inObject) { return([inObject isKindOfClass:[NSDate class]] ? @"Date" : NULL); } copy] autorelease],
+        [[^(id inObject) { return([inObject isKindOfClass:[CJSONSerializedData class]] ? @"JSONSerializedData" : NULL); } copy] autorelease],
+        NULL];
+        
     serializer = [theSerializer retain];
     }
 return(serializer);
 }
+
+- (CJSONDeserializer *)deserializer
+{
+if (deserializer == NULL) 
+    {
+    CJSONDeserializer *theDeserializer = [CJSONDeserializer deserializer];
+    deserializer = [theDeserializer retain];
+    }
+return(deserializer);
+}
+
+#pragma mark -
+
+- (id)URLOperationWithRequest:(NSURLRequest *)inURLRequest;
+    {
+    return([[[[self URLOperationClass] alloc] initWithSession:self request:inURLRequest] autorelease]);
+    }
+    
 
 @end

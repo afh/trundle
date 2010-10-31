@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class CJSONSerializer;
+@class CJSONDeserializer;
 
 @interface CCouchDBSession : NSObject {
 
@@ -17,5 +18,8 @@
 @property (readwrite, nonatomic, retain) NSOperationQueue *operationQueue;
 @property (readwrite, nonatomic, assign) Class URLOperationClass;
 @property (readwrite, nonatomic, retain) CJSONSerializer *serializer;
+@property (readwrite, nonatomic, retain) CJSONDeserializer *deserializer;
+
+- (id)URLOperationWithRequest:(NSURLRequest *)inURLRequest;
 
 @end
