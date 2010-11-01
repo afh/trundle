@@ -33,7 +33,6 @@ return(self);
 
 - (void)dealloc
 {
-[server release];
 server = NULL;
 [name release];
 name = NULL;
@@ -103,7 +102,7 @@ NSData *theData = [self.session.serializer serializeDictionary:inDocument error:
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
 [theRequest setHTTPBody:theData];
 
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	if (theOperation.error)
 		{
@@ -143,7 +142,7 @@ NSData *theData = [self.session.serializer serializeDictionary:inDocument error:
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
 [theRequest setHTTPBody:theData];
 
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
 		{
@@ -185,7 +184,7 @@ CURLOperation *theOperation = [self operationToCreateDocument:inDocument identif
 NSURL *theURL = [NSURL URLWithString:@"_all_docs" relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	NSMutableArray *theDocuments = [NSMutableArray array];
 	for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])
@@ -217,7 +216,7 @@ theOperation.failureHandler = inFailureHandler;
 NSURL *theURL = [NSURL URLWithString:inIdentifier relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	CCouchDBDocument *theDocument = [self.cachedDocuments objectForKey:inIdentifier];
 	if (theDocument == NULL)
@@ -242,7 +241,7 @@ theOperation.failureHandler = inFailureHandler;
 NSURL *theURL = inDocument.URL;
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[inDocument populateWithJSONDictionary:inParameter];
 
@@ -263,7 +262,7 @@ NSData *theData = [self.session.serializer serializeDictionary:inDocument.conten
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
 [theRequest setHTTPBody:theData];
 
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[inDocument populateWithJSONDictionary:inParameter];
 
@@ -281,7 +280,7 @@ NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"?rev=%@", inDo
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
 
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self.cachedDocuments removeObjectForKey:inDocument];
 	
@@ -292,5 +291,60 @@ theOperation.failureHandler = inFailureHandler;
 
 [self.session.operationQueue addOperation:theOperation];
 }
+
+//- (CURLOperation *)operationForChangesSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+//    {
+//    NSURL *theURL = [NSURL URLWithString:@"_changes?feed=continuous" relativeToURL:self.URL];
+//    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
+//    theRequest.HTTPMethod = @"GET";
+//
+//    CCouchDBURLOperation *theOperation = [[[CCouchDBContinuousURLOperation alloc] initWithRequest:theRequest] autorelease];
+//    theOperation.successHandler = ^(id inParameter) {
+//        
+//        if (inSuccessHandler)
+//            inSuccessHandler(inParameter);
+//        };
+//    theOperation.failureHandler = inFailureHandler;
+//
+//    return(theOperation);
+//    }
+
+- (CURLOperation *)operationToBulkCreateDocuments:(id)inDocuments successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+    {
+    NSURL *theURL = [NSURL URLWithString:@"_bulk_docs" relativeToURL:self.URL];
+    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
+    theRequest.HTTPMethod = @"POST";
+
+    NSDictionary *theBody = [NSDictionary dictionaryWithObjectsAndKeys:
+        inDocuments, @"docs",
+        NULL];
+
+    NSData *theData = [self.session.serializer serializeDictionary:theBody error:NULL];
+    [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
+    [theRequest setHTTPBody:theData];
+
+    CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
+    theOperation.successHandler = ^(id inParameter) {
+        if (theOperation.error)
+            {
+            if (inFailureHandler)
+                inFailureHandler(theOperation.error);
+            return;
+            }
+        
+//        if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
+//            {
+//            NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
+//            if (inFailureHandler)
+//                inFailureHandler(theError);
+//            return;
+//            }
+            
+        if (inSuccessHandler)
+            inSuccessHandler(theOperation.JSON);
+        };
+
+    return(theOperation);
+    }
 
 @end

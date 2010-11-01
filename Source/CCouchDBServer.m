@@ -9,7 +9,6 @@
 #import "CCouchDBServer.h"
 
 #import "Asserts.h"
-#import "CJSONDeserializer.h"
 
 #import "CCouchDBSession.h"
 #import "CCouchDBDatabase.h"
@@ -125,7 +124,7 @@ CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:
 NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
 	[self.databasesByName setObject:theRemoteDatabase forKey:inName];
@@ -143,7 +142,7 @@ theOperation.failureHandler = inFailureHandler;
 NSURL *theURL = [NSURL URLWithString:@"_all_dbs" relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databases"];
 	for (NSString *theName in inParameter)
@@ -172,7 +171,7 @@ CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:
 NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
 	[self.databasesByName setObject:theRemoteDatabase forKey:inName];
@@ -190,7 +189,7 @@ theOperation.failureHandler = inFailureHandler;
 NSURL *theURL = [NSURL URLWithString:inDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
-CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
 	[self.databasesByName removeObjectForKey:inDatabase.name];

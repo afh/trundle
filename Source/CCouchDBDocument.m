@@ -215,7 +215,7 @@
     [theRequest setValue:inAttachment.contentType forHTTPHeaderField:@"Content-Type"];
     [theRequest setHTTPBody:inAttachment.data];
 
-    CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+    CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
     theOperation.successHandler = ^(id inParameter) {
         if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
             {

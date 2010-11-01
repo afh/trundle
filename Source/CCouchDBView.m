@@ -74,7 +74,7 @@
     
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"GET";
-    CCouchDBURLOperation *theOperation = [[[[self.session URLOperationClass] alloc] initWithRequest:theRequest] autorelease];
+    CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
     theOperation.successHandler = ^(id inParameter) {
         NSMutableArray *theDocuments = [NSMutableArray array];
         for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])

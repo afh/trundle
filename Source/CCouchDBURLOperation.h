@@ -10,7 +10,10 @@
 
 #import "CouchDBClientTypes.h"
 
+@class CCouchDBSession;
+
 @interface CCouchDBURLOperation : CURLOperation {
+    CCouchDBSession *session;
 	id JSON;
     CouchDBSuccessHandler successHandler;
     CouchDBFailureHandler failureHandler;
@@ -19,5 +22,7 @@
 @property (readwrite, nonatomic, retain) id JSON;
 @property (readwrite, nonatomic, copy) CouchDBSuccessHandler successHandler;
 @property (readwrite, nonatomic, copy) CouchDBFailureHandler failureHandler;
+
+- (id)initWithSession:(CCouchDBSession *)inSession request:(NSURLRequest *)inRequest;
 
 @end

@@ -11,15 +11,40 @@
 #import "CJSONDeserializer.h"
 #import "CouchDBClientConstants.h"
 #import "NSError_CouchDBExtensions.h"
+#import "CCouchDBSession.h"
+
+@interface CCouchDBURLOperation ()
+@property (readwrite, nonatomic, assign) CCouchDBSession *session;
+@end
+
+#pragma mark -
 
 @implementation CCouchDBURLOperation
 
+@synthesize session;
 @synthesize successHandler;
 @synthesize failureHandler;
 @synthesize JSON;
 
+- (id)initWithSession:(CCouchDBSession *)inSession request:(NSURLRequest *)inRequest
+{
+if ((self = [super initWithRequest:inRequest]) != NULL)
+    {
+    session = inSession;
+    }
+return(self);
+}
+
 - (void)dealloc
 {
+session = NULL;
+
+[successHandler release];
+successHandler = NULL;
+
+[failureHandler release];
+failureHandler = NULL;
+
 [JSON release];
 JSON = NULL;
 //
@@ -49,7 +74,7 @@ if ([theContentType isEqualToString:kContentTypeJSON])
 id theJSON = NULL;
 if (theError == NULL)
 	{
-	theJSON = [[CJSONDeserializer deserializer] deserialize:self.data error:&theError];
+	theJSON = [[self.session deserializer] deserialize:self.data error:&theError];
 	NSInteger theStatusCode = theHTTPResponse.statusCode;
 	if (theJSON == NULL || theStatusCode < 200 || theStatusCode >= 300)
 		{
