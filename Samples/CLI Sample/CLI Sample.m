@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 
 #import "CCouchDBServer.h"
+#import "CCouchDBDatabase.h"
+#import "CCouchDBSession.h"
 #import "CRunLoopHelper.h"
 
 int main (int argc, const char * argv[])
@@ -8,31 +10,21 @@ int main (int argc, const char * argv[])
 NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
 CRunLoopHelper *theRLH = [[[CRunLoopHelper alloc] init] autorelease];
-CCouchDBServer *theServer = [[[CCouchDBServer alloc] initWithURL:[NSURL URLWithString:@"http://localhost:5984/"]] autorelease];
+CCouchDBServer *theServer = [[[CCouchDBServer alloc] init] autorelease];
+CCouchDBDatabase *theDatabase = [theServer databaseNamed:@"test"];
 
 // #############################################################################
 
-[theRLH prepare];
 
-[theServer fetchDatabasesWithSuccessHandler:^(id p) { NSLog(@"%@", p); [theRLH stop]; } failureHandler:NULL];
-
-[theRLH run];
-
-// #############################################################################
+NSOperation *theOperation = [theDatabase operationForChangesSuccessHandler:^(id inParameter) { NSLog(@"%@", inParameter); } failureHandler:^(NSError *inError) { NSLog(@"%@", inError); }];
+NSLog(@"%@", theOperation);
 
 [theRLH prepare];
 
-[theServer fetchDatabaseNamed:@"xyzzy" withSuccessHandler:^(id p) { NSLog(@"%@", p); [theRLH stop]; } failureHandler:^(NSError *p) { NSLog(@"%@", p); [theRLH stop]; }];
+[theServer.session.operationQueue addOperation:theOperation];
 
 [theRLH run];
 
-// #############################################################################
-
-[theRLH prepare];
-
-[theServer createDatabaseNamed:@"xyzzy" withSuccessHandler:^(id p) { NSLog(@"%@", p); [theRLH stop]; } failureHandler:^(NSError *p) { NSLog(@"%@", p.userInfo); [theRLH stop]; }];
-
-[theRLH run];
 
 
 [pool drain];
