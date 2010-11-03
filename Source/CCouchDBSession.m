@@ -67,7 +67,7 @@ if (serializer == NULL)
         [[^(CJSONSerializedData *inObject) { return((id)inObject.data); } copy] autorelease], @"JSONSerializedData",
         NULL];
     theSerializer.tests = [NSSet setWithObjects:
-        [[^(id inObject) { return([inObject isKindOfClass:[NSDate class]] ? @"Date" : NULL); } copy] autorelease],
+        [[^(id inObject) { return([inObject isKindOfClass:[NSDate class]] ? @"date" : NULL); } copy] autorelease],
         [[^(id inObject) { return([inObject isKindOfClass:[CJSONSerializedData class]] ? @"JSONSerializedData" : NULL); } copy] autorelease],
         NULL];
         
