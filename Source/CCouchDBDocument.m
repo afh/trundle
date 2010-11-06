@@ -119,7 +119,7 @@
                 [identifier release];
                 identifier = NULL;
                 }
-            
+
             NSMutableDictionary *theContent = [NSMutableDictionary dictionaryWithDictionary:self.content];
             [theContent setObject:inIdentifier forKey:@"_id"];
             self.content = theContent;
@@ -158,7 +158,7 @@
                 [revision release];
                 revision = NULL;
                 }
-            
+
             NSMutableDictionary *theContent = [NSMutableDictionary dictionaryWithDictionary:self.content];
             [theContent setObject:inRevision forKey:@"_rev"];
             self.content = theContent;
@@ -173,9 +173,9 @@
 
 - (NSURL *)URL
     {
-    return([NSURL URLWithString:[NSString stringWithFormat:@"%@/", self.encodedIdentifier] relativeToURL:self.database.URL]);
+    return([self.database.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@/", self.encodedIdentifier]]);
     }
-    
+
 #pragma mark -
 
 - (CCouchDBSession *)session
@@ -207,7 +207,7 @@
 
 - (void)addAttachment:(CCouchDBAttachment *)inAttachment
     {
-    NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?rev=%@", inAttachment.identifier, self.revision] relativeToURL:[self.URL absoluteURL]];
+    NSURL *theURL = [[self.URL absoluteURL] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@?rev=%@", inAttachment.identifier, self.revision]];
 
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"PUT";
@@ -224,16 +224,16 @@
 //                inFailureHandler(theError);
             return;
             }
-            
+
 //        NSString *theIdentifier = [inParameter objectForKey:@"id"];
 //        NSString *theRevision = [inParameter objectForKey:@"rev"];
-        
+
 //        if (inSuccessHandler)
 //            inSuccessHandler(theDocument);
         };
 
 //    return(theOperation);
-    
+
     [self.session.operationQueue addOperation:theOperation];
 
     }

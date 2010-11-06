@@ -53,7 +53,7 @@
 
 - (NSURL *)URL
     {
-    return([NSURL URLWithString:[NSString stringWithFormat:@"_design/%@/", self.identifier] relativeToURL:self.database.URL]);
+    return([self.database.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"_design/%@/", self.identifier]]);
     }
 
 - (CCouchDBSession *)session
@@ -65,15 +65,15 @@
 
 - (void)fetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
     {
-    NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"_view/%@", inName] relativeToURL:self.URL];
-    
+    NSURL *theURL = [self.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"_view/%@", inName]];
+
     if (inOptions.count > 1)
         {
         theURL = [NSURL URLWithRoot:theURL queryDictionary:inOptions];
         }
-    
+
 	NSLog(@"%@", theURL);
-    
+
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"GET";
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];

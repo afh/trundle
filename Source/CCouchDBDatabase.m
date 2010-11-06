@@ -77,7 +77,7 @@ return([NSString stringWithFormat:@"%@ (%@)", [super description], self.name]);
 	{
 	if (URL == NULL)
 		{
-		URL = [[NSURL URLWithString:[NSString stringWithFormat:@"%@/", self.encodedName] relativeToURL:self.server.URL] retain];
+		URL = [[self.server.URL URLByAppendingPathComponent:self.encodedName] retain];
 		}
 	return([[URL retain] autorelease]);
 	}
@@ -119,7 +119,7 @@ theOperation.successHandler = ^(id inParameter) {
 			inFailureHandler(theOperation.error);
 		return;
 		}
-	
+
 	if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
 		{
 		NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
@@ -127,10 +127,10 @@ theOperation.successHandler = ^(id inParameter) {
 			inFailureHandler(theError);
 		return;
 		}
-		
+
 	NSString *theIdentifier = [inParameter objectForKey:@"id"];
 	NSString *theRevision = [inParameter objectForKey:@"rev"];
-	
+
 	CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier revision:theRevision] autorelease];
 	[theDocument populateWithJSONDictionary:inDocument];
 	[self.cachedDocuments setObject:theDocument forKey:theIdentifier];
@@ -146,7 +146,7 @@ return(theOperation);
 - (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 {
 NSURL *theURL = [self.URL absoluteURL];
-//theURL = [NSURL URLWithString:inIdentifier relativeToURL:[self.URL absoluteURL]];
+//theURL = [[self.URL absoluteURL] URLByAppendingPathComponent:inIdentifier];
 theURL = [theURL URLByAppendingPathComponent:inIdentifier];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
@@ -166,7 +166,7 @@ theOperation.successHandler = ^(id inParameter) {
 		}
 
 	NSString *theRevision = [inParameter objectForKey:@"rev"];
-	
+
 	CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:inIdentifier revision:theRevision] autorelease];
 	[theDocument populateWithJSONDictionary:inDocument];
 	[self.cachedDocuments setObject:theDocument forKey:inIdentifier];
@@ -195,7 +195,7 @@ CURLOperation *theOperation = [self operationToCreateDocument:inDocument identif
 
 - (void)fetchAllDocumentsWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 {
-NSURL *theURL = [NSURL URLWithString:@"_all_docs" relativeToURL:self.URL];
+NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_all_docs"];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
@@ -205,7 +205,7 @@ theOperation.successHandler = ^(id inParameter) {
 	for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])
 		{
 		NSString *theIdentifier = [theRow objectForKey:@"id"];
-		
+
 		CCouchDBDocument *theDocument = [self.cachedDocuments objectForKey:theIdentifier];
 		if (theDocument == NULL)
 			{
@@ -214,7 +214,7 @@ theOperation.successHandler = ^(id inParameter) {
 			}
 
 		theDocument.revision = [theRow valueForKeyPath:@"value.rev"];
-			
+
 		[theDocuments addObject:theDocument];
 		}
 
@@ -228,7 +228,7 @@ theOperation.failureHandler = inFailureHandler;
 
 - (void)fetchDocumentForIdentifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
-NSURL *theURL = [NSURL URLWithString:inIdentifier relativeToURL:self.URL];
+NSURL *theURL = [self.URL URLByAppendingPathComponent:inIdentifier];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
@@ -240,7 +240,7 @@ theOperation.successHandler = ^(id inParameter) {
 		theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self] autorelease];
 		[self.cachedDocuments setObject:theDocument forKey:inIdentifier];
 		}
-	
+
 	[theDocument populateWithJSONDictionary:inParameter];
 
 	if (inSuccessHandler)
@@ -294,14 +294,14 @@ theOperation.failureHandler = inFailureHandler;
 
 - (void)deleteDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 {
-NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"?rev=%@", inDocument.revision] relativeToURL:inDocument.URL];
+NSURL *theURL = [inDocument.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"?rev=%@", inDocument.revision]];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self.cachedDocuments removeObjectForKey:inDocument];
-	
+
 	if (inSuccessHandler)
 		inSuccessHandler(inDocument);
 	};
@@ -312,7 +312,7 @@ theOperation.failureHandler = inFailureHandler;
 
 - (CURLOperation *)operationForChanges:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
     {
-    NSURL *theURL = [NSURL URLWithString:@"_changes" relativeToURL:self.URL];
+    NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_changes"];
 	if (inOptions)
 		{
 		theURL = [NSURL URLWithRoot:theURL queryDictionary:inOptions];
@@ -325,7 +325,7 @@ theOperation.failureHandler = inFailureHandler;
     CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithSession:self.session request:theRequest] autorelease];
     theOperation.successHandler = ^(id inParameter) {
 		CCouchDBChangeSet *theChangeSet = [[[CCouchDBChangeSet alloc] initWithJSON:inParameter] autorelease];
-	
+
         if (inSuccessHandler)
             inSuccessHandler(theChangeSet);
         };
@@ -336,7 +336,7 @@ theOperation.failureHandler = inFailureHandler;
 
 - (CURLOperation *)operationToBulkCreateDocuments:(id)inDocuments successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
     {
-    NSURL *theURL = [NSURL URLWithString:@"_bulk_docs" relativeToURL:self.URL];
+    NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_bulk_docs"];
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"POST";
 
@@ -356,7 +356,7 @@ theOperation.failureHandler = inFailureHandler;
                 inFailureHandler(theOperation.error);
             return;
             }
-        
+
 //        if ([[inParameter objectForKey:@"ok"] boolValue] == NO)
 //            {
 //            NSError *theError = [NSError errorWithDomain:kCouchErrorDomain code:-3 userInfo:NULL];
@@ -364,7 +364,7 @@ theOperation.failureHandler = inFailureHandler;
 //                inFailureHandler(theError);
 //            return;
 //            }
-            
+
         if (inSuccessHandler)
             inSuccessHandler(theOperation.JSON);
         };

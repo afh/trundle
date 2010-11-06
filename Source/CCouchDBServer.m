@@ -121,7 +121,7 @@ return(theDatabase);
 - (void)createDatabaseNamed:(NSString *)inName withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
 CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:self name:inName] autorelease];
-NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
+NSURL *theURL = [self.URL URLByAppendingPathComponent:theRemoteDatabase.encodedName];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
@@ -140,7 +140,7 @@ theOperation.failureHandler = inFailureHandler;
 
 - (void)fetchDatabasesWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 {
-NSURL *theURL = [NSURL URLWithString:@"_all_dbs" relativeToURL:self.URL];
+NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_all_dbs"];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
@@ -170,7 +170,7 @@ theOperation.failureHandler = inFailureHandler;
 - (void)fetchDatabaseNamed:(NSString *)inName withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
 CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:self name:inName] autorelease];
-NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
+NSURL *theURL = [self.URL URLByAppendingPathComponent:theRemoteDatabase.encodedName];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
@@ -189,7 +189,7 @@ theOperation.failureHandler = inFailureHandler;
 
 - (void)deleteDatabase:(CCouchDBDatabase *)inDatabase withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
-NSURL *theURL = [NSURL URLWithString:inDatabase.encodedName relativeToURL:self.URL];
+NSURL *theURL = [self.URL URLByAppendingPathComponent:inDatabase.encodedName];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
 [theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
