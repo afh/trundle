@@ -124,6 +124,7 @@ CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:
 NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"PUT";
+[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
@@ -142,6 +143,7 @@ theOperation.failureHandler = inFailureHandler;
 NSURL *theURL = [NSURL URLWithString:@"_all_dbs" relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
+[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databases"];
@@ -171,6 +173,7 @@ CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:
 NSURL *theURL = [NSURL URLWithString:theRemoteDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"GET";
+[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];
@@ -189,6 +192,7 @@ theOperation.failureHandler = inFailureHandler;
 NSURL *theURL = [NSURL URLWithString:inDatabase.encodedName relativeToURL:self.URL];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 theRequest.HTTPMethod = @"DELETE";
+[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 theOperation.successHandler = ^(id inParameter) {
 	[self willChangeValueForKey:@"databasesByName"];

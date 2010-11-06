@@ -66,7 +66,7 @@ NSHTTPURLResponse *theHTTPResponse = (NSHTTPURLResponse *)self.response;
 NSError *theError = NULL;
 
 NSString *theContentType = [theHTTPResponse.allHeaderFields objectForKey:@"Content-Type"];
-if ([theContentType isEqualToString:kContentTypeJSON])
+if ([theContentType isEqualToString:kContentTypeJSON] == NO)
 	{
 	theError = [NSError errorWithDomain:kCouchErrorDomain code:CouchDBErrorCode_ContentTypeNotJSON userInfo:NULL];
 	}

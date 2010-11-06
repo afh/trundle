@@ -15,6 +15,7 @@
 #import "CCouchDBServer.h"
 #import "CCouchDBSession.h"
 #import "CCouchDBURLOperation.h"
+#import "CouchDBClientConstants.h"
 
 @interface CCouchDBView ()
 @property (readonly, nonatomic, retain) CCouchDBSession *session;
@@ -52,7 +53,7 @@
 
 - (NSURL *)URL
     {
-    return([NSURL URLWithString:[NSString stringWithFormat:@"%@/", self.identifier] relativeToURL:self.database.URL]);
+    return([NSURL URLWithString:[NSString stringWithFormat:@"_design/%@/", self.identifier] relativeToURL:self.database.URL]);
     }
 
 - (CCouchDBSession *)session
@@ -71,9 +72,11 @@
         theURL = [NSURL URLWithRoot:theURL queryDictionary:inOptions];
         }
     
+	NSLog(@"%@", theURL);
     
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"GET";
+	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
     CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
     theOperation.successHandler = ^(id inParameter) {
         NSMutableArray *theDocuments = [NSMutableArray array];

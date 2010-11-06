@@ -211,7 +211,7 @@
 
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"PUT";
-
+	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
     [theRequest setValue:inAttachment.contentType forHTTPHeaderField:@"Content-Type"];
     [theRequest setHTTPBody:inAttachment.data];
 
