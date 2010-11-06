@@ -116,7 +116,7 @@ return(theDatabase);
 
 #pragma mark -
 
-- (void)createDatabaseNamed:(NSString *)inName withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToCreateDatabaseNamed:(NSString *)inName withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
 CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:self name:inName] autorelease];
 NSURL *theURL = [self.URL URLByAppendingPathComponent:theRemoteDatabase.encodedName];
@@ -133,10 +133,10 @@ theOperation.successHandler = ^(id inParameter) {
 		inSuccessHandler(theRemoteDatabase);
 	};
 theOperation.failureHandler = inFailureHandler;
-[self.session.operationQueue addOperation:theOperation];
+return(theOperation);
 }
 
-- (void)fetchDatabasesWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToFetchDatabasesWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 {
 NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_all_dbs"];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -162,10 +162,10 @@ theOperation.successHandler = ^(id inParameter) {
 	};
 theOperation.failureHandler = inFailureHandler;
 
-[self.session.operationQueue addOperation:theOperation];
+return(theOperation);
 }
 
-- (void)fetchDatabaseNamed:(NSString *)inName withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToFetchDatabaseNamed:(NSString *)inName withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
 CCouchDBDatabase *theRemoteDatabase = [[[CCouchDBDatabase alloc] initWithServer:self name:inName] autorelease];
 NSURL *theURL = [self.URL URLByAppendingPathComponent:theRemoteDatabase.encodedName];
@@ -182,10 +182,10 @@ theOperation.successHandler = ^(id inParameter) {
 		inSuccessHandler(theRemoteDatabase);
 	};
 theOperation.failureHandler = inFailureHandler;
-[self.session.operationQueue addOperation:theOperation];
+return(theOperation);
 }
 
-- (void)deleteDatabase:(CCouchDBDatabase *)inDatabase withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToDeleteDatabase:(CCouchDBDatabase *)inDatabase withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 {
 NSURL *theURL = [self.URL URLByAppendingPathComponent:inDatabase.encodedName];
 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -201,7 +201,7 @@ theOperation.successHandler = ^(id inParameter) {
 		inSuccessHandler(inDatabase);
 	};
 theOperation.failureHandler = inFailureHandler;
-[self.session.operationQueue addOperation:theOperation];
+return(theOperation);
 }
 
 @end
