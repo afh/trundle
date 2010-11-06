@@ -196,20 +196,7 @@
 
 #pragma mark -
 
-- (void)createDocument:(NSDictionary *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
-	{
-	CURLOperation *theOperation = [self operationToCreateDocument:inDocument successHandler:inSuccessHandler failureHandler:inFailureHandler];
-
-	[self.session.operationQueue addOperation:theOperation];
-	}
-
-- (void)createDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
-	{
-	CURLOperation *theOperation = [self operationToCreateDocument:inDocument identifier:inIdentifier successHandler:inSuccessHandler failureHandler:inFailureHandler];
-	[self.session.operationQueue addOperation:theOperation];
-	}
-
-- (void)fetchAllDocumentsWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToFetchAllDocumentsWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 	{
 	NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_all_docs"];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -239,10 +226,10 @@
 		};
 	theOperation.failureHandler = inFailureHandler;
 
-	[self.session.operationQueue addOperation:theOperation];
+	return(theOperation);
 	}
 
-- (void)fetchDocumentForIdentifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToFetchDocumentForIdentifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
 	NSURL *theURL = [self.URL URLByAppendingPathComponent:inIdentifier];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -264,10 +251,10 @@
 		};
 	theOperation.failureHandler = inFailureHandler;
 
-	[self.session.operationQueue addOperation:theOperation];
+	return(theOperation);
 	}
 
-- (void)fetchDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToFetchDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
 	// TODO -- this only fetches the latest document (i.e. _rev is ignored). What if we don't want the latest document?
 	NSURL *theURL = inDocument.URL;
@@ -283,10 +270,10 @@
 		};
 	theOperation.failureHandler = inFailureHandler;
 
-	[self.session.operationQueue addOperation:theOperation];
+	return(theOperation);
 	}
 
-- (void)updateDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToUpdateDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
 	NSURL *theURL = inDocument.URL;
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -305,10 +292,10 @@
 		};
 	theOperation.failureHandler = inFailureHandler;
 
-	[self.session.operationQueue addOperation:theOperation];
+	return(theOperation);
 	}
 
-- (void)deleteDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToDeleteDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
 	NSURL *theURL = [inDocument.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"?rev=%@", inDocument.revision]];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -323,7 +310,7 @@
 		};
 	theOperation.failureHandler = inFailureHandler;
 
-	[self.session.operationQueue addOperation:theOperation];
+	return(theOperation);
 	}
 
 - (CURLOperation *)operationForChanges:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
