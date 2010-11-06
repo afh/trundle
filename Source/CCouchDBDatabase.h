@@ -13,6 +13,7 @@
 @class CCouchDBServer;
 @class CCouchDBDocument;
 @class CURLOperation;
+@class CCouchDBDesignDocument;
 
 @interface CCouchDBDatabase : NSObject {
 	CCouchDBServer *server;
@@ -20,17 +21,17 @@
 	NSString *encodedName;
 	NSURL *URL;
 	NSCache *cachedDocuments;
+	NSMutableDictionary *designDocuments;
 }
 
 @property (readonly, assign) CCouchDBServer *server;
 @property (readonly, copy) NSString *name;
 @property (readonly, copy) NSString *encodedName;
 @property (readonly, copy) NSURL *URL;
-@property (readonly, retain) NSCache *cachedDocuments;
 
 - (id)initWithServer:(CCouchDBServer *)inServer name:(NSString *)inName;
 
-//- (CCouchDBView *)designDocumentNamed:(NSString *)inName;
+- (CCouchDBDesignDocument *)designDocumentNamed:(NSString *)inName;
 
 - (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 - (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;

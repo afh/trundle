@@ -1,12 +1,12 @@
 //
-//  CCouchDBView.m
+//  CCouchDBDesignDocument.m
 //  AnythingBucket
 //
 //  Created by Jonathan Wight on 10/21/10.
 //  Copyright 2010 toxicsoftware.com. All rights reserved.
 //
 
-#import "CCouchDBView.h"
+#import "CCouchDBDesignDocument.h"
 
 #import "NSURL_Extensions.h"
 
@@ -17,13 +17,13 @@
 #import "CCouchDBURLOperation.h"
 #import "CouchDBClientConstants.h"
 
-@interface CCouchDBView ()
+@interface CCouchDBDesignDocument ()
 @property (readonly, nonatomic, retain) CCouchDBSession *session;
 @end
 
 #pragma mark -
 
-@implementation CCouchDBView
+@implementation CCouchDBDesignDocument
 
 @synthesize database;
 @synthesize identifier;
@@ -40,7 +40,6 @@
 
 - (void)dealloc
     {
-    [database release];
     database = NULL;
 
     [identifier release];
@@ -71,8 +70,6 @@
         {
         theURL = [NSURL URLWithRoot:theURL queryDictionary:inOptions];
         }
-
-	NSLog(@"%@", theURL);
 
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"GET";

@@ -1,5 +1,5 @@
 //
-//  CCouchDBView.h
+//  CCouchDBDesignDocument.h
 //  AnythingBucket
 //
 //  Created by Jonathan Wight on 10/21/10.
@@ -13,7 +13,7 @@
 @class CCouchDBDatabase;
 @class CURLOperation;
 
-@interface CCouchDBView : NSObject {
+@interface CCouchDBDesignDocument : NSObject {
     CCouchDBDatabase *database;
     NSString *identifier;
 }
