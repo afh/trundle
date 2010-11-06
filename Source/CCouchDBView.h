@@ -11,6 +11,7 @@
 #import "CouchDBClientTypes.h"
 
 @class CCouchDBDatabase;
+@class CURLOperation;
 
 @interface CCouchDBView : NSObject {
     CCouchDBDatabase *database;
@@ -22,6 +23,8 @@
 @property (readonly, nonatomic, retain) NSURL *URL;
 
 - (id)initWithDatabase:(CCouchDBDatabase *)inDatabase identifier:(NSString *)inIdentifier;
+
+- (CURLOperation *)operationForFetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 
 - (void)fetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 

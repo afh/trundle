@@ -63,11 +63,11 @@
 
 #pragma mark -
 
-- (void)fetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
-    {
+- (CURLOperation *)operationForFetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+	{
     NSURL *theURL = [self.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"_view/%@", inName]];
 
-    if (inOptions.count > 1)
+    if (inOptions.count > 0)
         {
         theURL = [NSURL URLWithRoot:theURL queryDictionary:inOptions];
         }
@@ -78,19 +78,15 @@
     theRequest.HTTPMethod = @"GET";
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
     CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
-    theOperation.successHandler = ^(id inParameter) {
-        NSMutableArray *theDocuments = [NSMutableArray array];
-        for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])
-            {
-            CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self.database] autorelease];
-            [theDocument populateWithJSONDictionary:[theRow valueForKeyPath:@"value"]];
-            [theDocuments addObject:theDocument];
-            }
-
-        if (inSuccessHandler)
-            inSuccessHandler(theDocuments);
-        };
+    theOperation.successHandler = inSuccessHandler;
     theOperation.failureHandler = inFailureHandler;
+
+	return(theOperation);
+	}
+
+- (void)fetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+    {
+	CURLOperation *theOperation = [self operationForFetchViewNamed:inName options:inOptions withSuccessHandler:inSuccessHandler failureHandler:inFailureHandler];
 
     [self.session.operationQueue addOperation:theOperation];
     }
