@@ -53,7 +53,7 @@
 
 - (NSURL *)URL
     {
-    return([self.database.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"_design/%@/", self.identifier]]);
+    return([self.database.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"_design/%@", self.identifier]]);
     }
 
 - (CCouchDBSession *)session

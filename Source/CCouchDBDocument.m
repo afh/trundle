@@ -173,7 +173,7 @@
 
 - (NSURL *)URL
     {
-    return([self.database.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@/", self.encodedIdentifier]]);
+    return([self.database.URL URLByAppendingPathComponent:self.encodedIdentifier]);
     }
 
 #pragma mark -

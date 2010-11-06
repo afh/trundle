@@ -51,8 +51,6 @@ if ((self = [super init]) != NULL)
 	{
     session = [inSession retain];
 	URL = [inURL retain];
-	if ([URL.path length] == 0)
-		URL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@/", [inURL absoluteString]]];
 	}
 return(self);
 }
