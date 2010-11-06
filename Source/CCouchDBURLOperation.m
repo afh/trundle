@@ -27,77 +27,77 @@
 @synthesize JSON;
 
 - (id)initWithSession:(CCouchDBSession *)inSession request:(NSURLRequest *)inRequest
-{
-if ((self = [super initWithRequest:inRequest]) != NULL)
-    {
-    session = inSession;
-    }
-return(self);
-}
+	{
+	if ((self = [super initWithRequest:inRequest]) != NULL)
+		{
+		session = inSession;
+		}
+	return(self);
+	}
 
 - (void)dealloc
-{
-session = NULL;
+	{
+	session = NULL;
 
-[successHandler release];
-successHandler = NULL;
+	[successHandler release];
+	successHandler = NULL;
 
-[failureHandler release];
-failureHandler = NULL;
+	[failureHandler release];
+	failureHandler = NULL;
 
-[JSON release];
-JSON = NULL;
-//
-[super dealloc];
-}
+	[JSON release];
+	JSON = NULL;
+	//
+	[super dealloc];
+	}
 
 #pragma mark -
 
 - (void)start
-{
-[super start];
-//
-}
+	{
+	[super start];
+	//
+	}
 
 - (void)didFinish
-{
-NSHTTPURLResponse *theHTTPResponse = (NSHTTPURLResponse *)self.response;
-
-NSError *theError = NULL;
-
-NSString *theContentType = [theHTTPResponse.allHeaderFields objectForKey:@"Content-Type"];
-if ([theContentType isEqualToString:kContentTypeJSON] == NO)
 	{
-	theError = [NSError errorWithDomain:kCouchErrorDomain code:CouchDBErrorCode_ContentTypeNotJSON userInfo:NULL];
-	}
+	NSHTTPURLResponse *theHTTPResponse = (NSHTTPURLResponse *)self.response;
 
-id theJSON = NULL;
-if (theError == NULL)
-	{
-	theJSON = [[self.session deserializer] deserialize:self.data error:&theError];
-	NSInteger theStatusCode = theHTTPResponse.statusCode;
-	if (theJSON == NULL || theStatusCode < 200 || theStatusCode >= 300)
+	NSError *theError = NULL;
+
+	NSString *theContentType = [theHTTPResponse.allHeaderFields objectForKey:@"Content-Type"];
+	if ([theContentType isEqualToString:kContentTypeJSON] == NO)
 		{
-		theError = [NSError couchDBErrorWithURLResponse:self.response JSONDictionary:theJSON];
+		theError = [NSError errorWithDomain:kCouchErrorDomain code:CouchDBErrorCode_ContentTypeNotJSON userInfo:NULL];
+		}
+
+	id theJSON = NULL;
+	if (theError == NULL)
+		{
+		theJSON = [[self.session deserializer] deserialize:self.data error:&theError];
+		NSInteger theStatusCode = theHTTPResponse.statusCode;
+		if (theJSON == NULL || theStatusCode < 200 || theStatusCode >= 300)
+			{
+			theError = [NSError couchDBErrorWithURLResponse:self.response JSONDictionary:theJSON];
+			}
+		}
+
+	if (theError != NULL)
+		{
+		[self didFailWithError:theError];
+		}
+	else
+		{
+		self.JSON = theJSON;
+		
+		if (self.successHandler)
+			{
+			self.successHandler(theJSON);
+			}
+
+		[super didFinish];
 		}
 	}
-
-if (theError != NULL)
-	{
-	[self didFailWithError:theError];
-	}
-else
-	{
-	self.JSON = theJSON;
-    
-    if (self.successHandler)
-        {
-        self.successHandler(theJSON);
-        }
-
-	[super didFinish];
-	}
-}
 
 - (void)didFailWithError:(NSError *)inError
     {

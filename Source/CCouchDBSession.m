@@ -22,69 +22,69 @@
 @synthesize deserializer;
 
 - (void)dealloc
-{
-[operationQueue cancelAllOperations];
-[operationQueue waitUntilAllOperationsAreFinished];
-[operationQueue release];
-operationQueue = NULL;
-//
-[serializer release];
-serializer = NULL;
-//
-[deserializer release];
-deserializer = NULL;
-//
-[super dealloc];
-}
+	{
+	[operationQueue cancelAllOperations];
+	[operationQueue waitUntilAllOperationsAreFinished];
+	[operationQueue release];
+	operationQueue = NULL;
+	//
+	[serializer release];
+	serializer = NULL;
+	//
+	[deserializer release];
+	deserializer = NULL;
+	//
+	[super dealloc];
+	}
 
 #pragma mark -
 
 - (NSOperationQueue *)operationQueue
-{
-if (operationQueue == NULL)
-    {
-    operationQueue = [[NSOperationQueue alloc] init];
-    }
-return(operationQueue);
-}
+	{
+	if (operationQueue == NULL)
+		{
+		operationQueue = [[NSOperationQueue alloc] init];
+		}
+	return(operationQueue);
+	}
 
 - (Class)URLOperationClass
-{
-if (URLOperationClass == NULL)
-    {
-    return([CCouchDBURLOperation class]);
-    }
-return(URLOperationClass);
-}
+	{
+	if (URLOperationClass == NULL)
+		{
+		return([CCouchDBURLOperation class]);
+		}
+	return(URLOperationClass);
+	}
 
 - (CJSONSerializer *)serializer
-{
-if (serializer == NULL) 
-    {
-    CFilteringJSONSerializer *theSerializer = [CFilteringJSONSerializer serializer];
-    theSerializer.convertersByName = [NSDictionary dictionaryWithObjectsAndKeys:
-        [[^(NSDate *inDate) { return((id)[inDate ISO8601String]); } copy] autorelease], @"date",
-        [[^(CJSONSerializedData *inObject) { return((id)inObject.data); } copy] autorelease], @"JSONSerializedData",
-        NULL];
-    theSerializer.tests = [NSSet setWithObjects:
-        [[^(id inObject) { return([inObject isKindOfClass:[NSDate class]] ? @"date" : NULL); } copy] autorelease],
-        [[^(id inObject) { return([inObject isKindOfClass:[CJSONSerializedData class]] ? @"JSONSerializedData" : NULL); } copy] autorelease],
-        NULL];
-        
-    serializer = [theSerializer retain];
-    }
-return(serializer);
-}
+	{
+	if (serializer == NULL) 
+		{
+		CFilteringJSONSerializer *theSerializer = [CFilteringJSONSerializer serializer];
+		theSerializer.convertersByName = [NSDictionary dictionaryWithObjectsAndKeys:
+			[[^(NSDate *inDate) { return((id)[inDate ISO8601String]); } copy] autorelease], @"date",
+			[[^(CJSONSerializedData *inObject) { return((id)inObject.data); } copy] autorelease], @"JSONSerializedData",
+			NULL];
+		theSerializer.tests = [NSSet setWithObjects:
+			[[^(id inObject) { return([inObject isKindOfClass:[NSDate class]] ? @"date" : NULL); } copy] autorelease],
+			[[^(id inObject) { return([inObject isKindOfClass:[CJSONSerializedData class]] ? @"JSONSerializedData" : NULL); } copy] autorelease],
+			NULL];
+			
+		serializer = [theSerializer retain];
+		}
+	return(serializer);
+	}
 
 - (CJSONDeserializer *)deserializer
-{
-if (deserializer == NULL) 
-    {
-    CJSONDeserializer *theDeserializer = [CJSONDeserializer deserializer];
-    deserializer = [theDeserializer retain];
-    }
-return(deserializer);
-}
+	{
+	if (deserializer == NULL) 
+		{
+		CJSONDeserializer *theDeserializer = [CJSONDeserializer deserializer];
+		deserializer = [theDeserializer retain];
+		}
+	return(deserializer);
+	}
 
 #pragma mark -
 
@@ -93,5 +93,4 @@ return(deserializer);
     return([[[[self URLOperationClass] alloc] initWithSession:self request:inURLRequest] autorelease]);
     }
     
-
 @end
