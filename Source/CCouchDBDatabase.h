@@ -20,7 +20,6 @@
 	NSString *name;
 	NSString *encodedName;
 	NSURL *URL;
-	NSCache *cachedDocuments;
 	NSMutableDictionary *designDocuments;
 }
 

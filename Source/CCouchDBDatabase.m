@@ -19,7 +19,6 @@
 #import "CCouchDBDesignDocument.h"
 
 @interface CCouchDBDatabase ()
-@property (readonly, retain) NSCache *cachedDocuments;
 @property (readonly, retain) NSMutableDictionary *designDocuments;
 @end
 
@@ -27,7 +26,6 @@
 
 @synthesize server;
 @synthesize name;
-@synthesize cachedDocuments;
 @synthesize designDocuments;
 
 - (id)initWithServer:(CCouchDBServer *)inServer name:(NSString *)inName
@@ -45,8 +43,6 @@
 	server = NULL;
 	[name release];
 	name = NULL;
-	[cachedDocuments release];
-	cachedDocuments = NULL;
 	[designDocuments release];
 	designDocuments = NULL;
 	//
@@ -89,18 +85,6 @@
 			URL = [[self.server.URL URLByAppendingPathComponent:self.encodedName] retain];
 			}
 		return([[URL retain] autorelease]);
-		}
-	}
-
-- (NSCache *)cachedDocuments
-	{
-	@synchronized(self)
-		{
-		if (cachedDocuments == NULL)
-			{
-			cachedDocuments = [[NSCache alloc] init];
-			}
-		return([[cachedDocuments retain] autorelease]);
 		}
 	}
 
@@ -149,7 +133,6 @@
 
 		CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier revision:theRevision] autorelease];
 		[theDocument populateWithJSONDictionary:inDocument];
-		[self.cachedDocuments setObject:theDocument forKey:theIdentifier];
 
 		if (inSuccessHandler)
 			inSuccessHandler(theDocument);
@@ -184,7 +167,6 @@
 
 		CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:inIdentifier revision:theRevision] autorelease];
 		[theDocument populateWithJSONDictionary:inDocument];
-		[self.cachedDocuments setObject:theDocument forKey:inIdentifier];
 
 		if (inSuccessHandler)
 			inSuccessHandler(theDocument);
@@ -208,13 +190,7 @@
 			{
 			NSString *theIdentifier = [theRow objectForKey:@"id"];
 
-			CCouchDBDocument *theDocument = [self.cachedDocuments objectForKey:theIdentifier];
-			if (theDocument == NULL)
-				{
-				theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
-				[self.cachedDocuments setObject:theDocument forKey:theIdentifier];
-				}
-
+			CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
 			theDocument.revision = [theRow valueForKeyPath:@"value.rev"];
 
 			[theDocuments addObject:theDocument];
@@ -236,12 +212,7 @@
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 	CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 	theOperation.successHandler = ^(id inParameter) {
-		CCouchDBDocument *theDocument = [self.cachedDocuments objectForKey:inIdentifier];
-		if (theDocument == NULL)
-			{
-			theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self] autorelease];
-			[self.cachedDocuments setObject:theDocument forKey:inIdentifier];
-			}
+		CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self] autorelease];
 
 		[theDocument populateWithJSONDictionary:inParameter];
 
@@ -304,8 +275,6 @@
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 	CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 	theOperation.successHandler = ^(id inParameter) {
-		[self.cachedDocuments removeObjectForKey:inDocument];
-
 		if (inSuccessHandler)
 			inSuccessHandler(inDocument);
 		};
@@ -423,13 +392,7 @@
 			{
 			NSString *theIdentifier = [theRow objectForKey:@"id"];
 
-			CCouchDBDocument *theDocument = [self.cachedDocuments objectForKey:theIdentifier];
-			if (theDocument == NULL)
-				{
-				theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
-				[self.cachedDocuments setObject:theDocument forKey:theIdentifier];
-				}
-
+			CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
 			theDocument.revision = [theRow valueForKeyPath:@"value.rev"];
 
 			[theDocuments addObject:theDocument];
