@@ -161,12 +161,11 @@
 
 - (CURLOperation *)operationToCreateDocument:(NSDictionary *)inDocument identifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
-	NSURL *theURL = [self.URL absoluteURL];
-	//theURL = [[self.URL absoluteURL] URLByAppendingPathComponent:inIdentifier];
-	theURL = [theURL URLByAppendingPathComponent:inIdentifier];
+	NSURL *theURL = [[self.URL absoluteURL] URLByAppendingPathComponent:inIdentifier];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
 	theRequest.HTTPMethod = @"PUT";
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
+
 	NSData *theData = [self.session.serializer serializeDictionary:inDocument error:NULL];
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
 	[theRequest setHTTPBody:theData];
@@ -196,7 +195,7 @@
 
 #pragma mark -
 
-- (CURLOperation *)operationToFetchAllDocumentsWithSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToFetchAllDocumentsWithOptions:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
 	NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_all_docs"];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -229,7 +228,7 @@
 	return(theOperation);
 	}
 
-- (CURLOperation *)operationToFetchDocumentForIdentifier:(NSString *)inIdentifier successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToFetchDocumentForIdentifier:(NSString *)inIdentifier options:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
 	NSURL *theURL = [self.URL URLByAppendingPathComponent:inIdentifier];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
@@ -254,7 +253,7 @@
 	return(theOperation);
 	}
 
-- (CURLOperation *)operationToFetchDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToFetchDocument:(CCouchDBDocument *)inDocument options:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
 	// TODO -- this only fetches the latest document (i.e. _rev is ignored). What if we don't want the latest document?
 	NSURL *theURL = inDocument.URL;
@@ -272,6 +271,8 @@
 
 	return(theOperation);
 	}
+
+#pragma mark -
 
 - (CURLOperation *)operationToUpdateDocument:(CCouchDBDocument *)inDocument successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
@@ -313,7 +314,7 @@
 	return(theOperation);
 	}
 
-- (CURLOperation *)operationForChanges:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToFetchChanges:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
     {
     NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_changes"];
 	if (inOptions)
@@ -322,7 +323,6 @@
 		}
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"GET";
-	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 
     CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithSession:self.session request:theRequest] autorelease];
@@ -342,6 +342,7 @@
     NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_bulk_docs"];
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"POST";
+	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 
     NSDictionary *theBody = [NSDictionary dictionaryWithObjectsAndKeys:
         inDocuments, @"docs",
@@ -374,5 +375,72 @@
 
     return(theOperation);
     }
+	
+- (CURLOperation *)operationToBulkFetchDocuments:(NSArray *)inDocuments options:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+	{
+	NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_all_docs"];
+	
+	if (inOptions == NULL)
+		{
+		inOptions = [NSDictionary dictionaryWithObject:@"true" forKey:@"include_docs"];
+		}
+	
+	if (inOptions.count > 0)
+		{
+		theURL = [NSURL URLWithRoot:theURL queryDictionary:inOptions];
+		}
+
+	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
+	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
+
+	if (inDocuments.count == 0)
+		{
+		theRequest.HTTPMethod = @"GET";
+		}
+	else
+		{
+		theRequest.HTTPMethod = @"POST";
+		
+		NSDictionary *theBodyDictionary = [NSDictionary dictionaryWithObject:inDocuments forKey:@"keys"];
+		NSError *theError = NULL;
+		NSData *theData = [self.session.serializer serializeDictionary:theBodyDictionary error:&theError];
+		if (theData == NULL)
+			{
+			if (inFailureHandler)
+				{
+				inFailureHandler(theError);
+				}
+			return(NULL);
+			}
+		[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Content-Type"];
+		[theRequest setHTTPBody:theData];
+		}
+	
+	CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
+	theOperation.successHandler = ^(id inParameter) {
+		NSMutableArray *theDocuments = [NSMutableArray array];
+		for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])
+			{
+			NSString *theIdentifier = [theRow objectForKey:@"id"];
+
+			CCouchDBDocument *theDocument = [self.cachedDocuments objectForKey:theIdentifier];
+			if (theDocument == NULL)
+				{
+				theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
+				[self.cachedDocuments setObject:theDocument forKey:theIdentifier];
+				}
+
+			theDocument.revision = [theRow valueForKeyPath:@"value.rev"];
+
+			[theDocuments addObject:theDocument];
+			}
+
+		if (inSuccessHandler)
+			inSuccessHandler(theDocuments);
+		};
+	theOperation.failureHandler = inFailureHandler;
+
+	return(theOperation);
+	}
 
 @end

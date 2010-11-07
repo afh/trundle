@@ -62,7 +62,7 @@
 
 #pragma mark -
 
-- (CURLOperation *)operationForFetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
+- (CURLOperation *)operationToFetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
     NSURL *theURL = [self.URL URLByAppendingPathComponent:[NSString stringWithFormat:@"_view/%@", inName]];
 
@@ -80,12 +80,5 @@
 
 	return(theOperation);
 	}
-
-- (void)fetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
-    {
-	CURLOperation *theOperation = [self operationForFetchViewNamed:inName options:inOptions withSuccessHandler:inSuccessHandler failureHandler:inFailureHandler];
-
-    [self.session.operationQueue addOperation:theOperation];
-    }
 
 @end
