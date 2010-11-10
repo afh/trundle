@@ -132,7 +132,7 @@
 		NSString *theRevision = [inParameter objectForKey:@"rev"];
 
 		CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier revision:theRevision] autorelease];
-		[theDocument populateWithJSONDictionary:inDocument];
+		[theDocument populateWithJSON:inDocument];
 
 		if (inSuccessHandler)
 			inSuccessHandler(theDocument);
@@ -166,7 +166,7 @@
 		NSString *theRevision = [inParameter objectForKey:@"rev"];
 
 		CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:inIdentifier revision:theRevision] autorelease];
-		[theDocument populateWithJSONDictionary:inDocument];
+		[theDocument populateWithJSON:inDocument];
 
 		if (inSuccessHandler)
 			inSuccessHandler(theDocument);
@@ -179,29 +179,7 @@
 
 - (CURLOperation *)operationToFetchAllDocumentsWithOptions:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
 	{
-	NSURL *theURL = [self.URL URLByAppendingPathComponent:@"_all_docs"];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
-	theRequest.HTTPMethod = @"GET";
-	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
-	CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
-	theOperation.successHandler = ^(id inParameter) {
-		NSMutableArray *theDocuments = [NSMutableArray array];
-		for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])
-			{
-			NSString *theIdentifier = [theRow objectForKey:@"id"];
-
-			CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
-			theDocument.revision = [theRow valueForKeyPath:@"value.rev"];
-
-			[theDocuments addObject:theDocument];
-			}
-
-		if (inSuccessHandler)
-			inSuccessHandler(theDocuments);
-		};
-	theOperation.failureHandler = inFailureHandler;
-
-	return(theOperation);
+	return([self operationToBulkFetchDocuments:NULL options:NULL successHandler:inSuccessHandler failureHandler:inFailureHandler]);
 	}
 
 - (CURLOperation *)operationToFetchDocumentForIdentifier:(NSString *)inIdentifier options:(NSDictionary *)inOptions successHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler
@@ -214,7 +192,7 @@
 	theOperation.successHandler = ^(id inParameter) {
 		CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self] autorelease];
 
-		[theDocument populateWithJSONDictionary:inParameter];
+		[theDocument populateWithJSON:inParameter];
 
 		if (inSuccessHandler)
 			inSuccessHandler(theDocument);
@@ -233,7 +211,7 @@
 	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
 	CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 	theOperation.successHandler = ^(id inParameter) {
-		[inDocument populateWithJSONDictionary:inParameter];
+		[inDocument populateWithJSON:inParameter];
 
 		if (inSuccessHandler)
 			inSuccessHandler(inDocument);
@@ -257,7 +235,7 @@
 
 	CCouchDBURLOperation *theOperation = [self.session URLOperationWithRequest:theRequest];
 	theOperation.successHandler = ^(id inParameter) {
-		[inDocument populateWithJSONDictionary:inParameter];
+		[inDocument populateWithJSON:inParameter];
 
 		if (inSuccessHandler)
 			inSuccessHandler(inDocument);
@@ -296,7 +274,7 @@
 
     CCouchDBURLOperation *theOperation = [[[CCouchDBURLOperation alloc] initWithSession:self.session request:theRequest] autorelease];
     theOperation.successHandler = ^(id inParameter) {
-		CCouchDBChangeSet *theChangeSet = [[[CCouchDBChangeSet alloc] initWithJSON:inParameter] autorelease];
+		CCouchDBChangeSet *theChangeSet = [[[CCouchDBChangeSet alloc] initWithDatabase:self JSON:inParameter] autorelease];
 
         if (inSuccessHandler)
             inSuccessHandler(theChangeSet);
@@ -390,12 +368,23 @@
 		NSMutableArray *theDocuments = [NSMutableArray array];
 		for (NSDictionary *theRow in [inParameter objectForKey:@"rows"])
 			{
-			NSString *theIdentifier = [theRow objectForKey:@"id"];
+			NSDictionary *doc = [theRow objectForKey:@"doc"];
+			if (doc)
+				{
+				CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self] autorelease];
+				[theDocument populateWithJSON:doc];
 
-			CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
-			theDocument.revision = [theRow valueForKeyPath:@"value.rev"];
+				[theDocuments addObject:theDocument];
+				}
+			else
+				{
+				NSString *theIdentifier = [theRow objectForKey:@"id"];
 
-			[theDocuments addObject:theDocument];
+				CCouchDBDocument *theDocument = [[[CCouchDBDocument alloc] initWithDatabase:self identifier:theIdentifier] autorelease];
+				theDocument.revision = [theRow valueForKeyPath:@"value.rev"];
+
+				[theDocuments addObject:theDocument];
+				}
 			}
 
 		if (inSuccessHandler)

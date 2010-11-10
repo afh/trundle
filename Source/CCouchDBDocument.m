@@ -66,6 +66,15 @@
     return(self);
     }
 
+- (id)initWithDatabase:(CCouchDBDatabase *)inDatabase JSON:(id)inJSON;
+{
+if ((self = [self initWithDatabase:inDatabase]) != NULL)
+	{
+	[self populateWithJSON:inJSON];
+	}
+return(self);
+}
+
 - (void)dealloc
     {
     database = NULL;
@@ -185,12 +194,12 @@
 
 #pragma mark -
 
-- (void)populateWithJSONDictionary:(NSDictionary *)inDictionary
+- (void)populateWithJSON:(id)inDictionary
     {
     self.content = inDictionary;
     }
 
-- (NSDictionary *)asJSONDictionary
+- (id)asJSON
     {
     if (self.content)
         {
@@ -205,6 +214,7 @@
         }
     }
 
+// TODO this is just a quick hack for attachments. Needs a lot more work.
 - (void)addAttachment:(CCouchDBAttachment *)inAttachment
     {
     NSURL *theURL = [[self.URL absoluteURL] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@?rev=%@", inAttachment.identifier, self.revision]];
