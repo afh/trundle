@@ -8,16 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+@class CCouchDBDatabase;
+
 @interface CCouchDBChangeSet : NSObject {
+	CCouchDBDatabase *database;
 	NSInteger lastSequence;
 	NSSet *changedDocuments;
 	NSSet *deletedDocuments;
 }
 
+@property (readonly, nonatomic, assign) CCouchDBDatabase *database;
 @property (readonly, nonatomic, assign) NSInteger lastSequence;
 @property (readonly, nonatomic, retain) NSSet *changedDocuments;
 @property (readonly, nonatomic, retain) NSSet *deletedDocuments;
 
-- (id)initWithJSON:(id)inJSON;
+- (id)initWithDatabase:(CCouchDBDatabase *)inDatabase JSON:(id)inJSON;
 
 @end

@@ -20,14 +20,16 @@
 
 @implementation CCouchDBChangeSet
 
+@synthesize database;
 @synthesize lastSequence;
 @synthesize changedDocuments;
 @synthesize deletedDocuments;
 
-- (id)initWithJSON:(id)inJSON
+- (id)initWithDatabase:(CCouchDBDatabase *)inDatabase JSON:(id)inJSON
 	{
 	if ((self = [super init]) != NULL)
 		{
+		database = inDatabase;
 		[self processJSON:inJSON error:NULL];
 		}
 	return(self);
@@ -35,10 +37,16 @@
 	
 - (void)dealloc
 	{
-	// TODO 
+	database = NULL;
+	[changedDocuments release];
+	changedDocuments = NULL;
+	[deletedDocuments release];
+	deletedDocuments = NULL;
 	//
 	[super dealloc];
 	}
+
+#pragma mark -
 
 - (NSString *)description
 	{
