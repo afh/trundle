@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		452B9AAC11AE4042002C0BB3 /* CRunLoopHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 452B9AAB11AE4042002C0BB3 /* CRunLoopHelper.m */; };
+		4530628512A184D700B99DFA /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530628412A184D700B99DFA /* CJSONSerializedData.m */; };
+		4530628A12A184E400B99DFA /* CTemporaryFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530628912A184E400B99DFA /* CTemporaryFile.m */; };
 		45DF31CE1272EBC900C72889 /* CCouchDBAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DF31BC1272EBC900C72889 /* CCouchDBAttachment.m */; };
 		45DF31CF1272EBC900C72889 /* CCouchDBDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DF31BE1272EBC900C72889 /* CCouchDBDatabase.m */; };
 		45DF31D01272EBC900C72889 /* CCouchDBDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DF31C01272EBC900C72889 /* CCouchDBDocument.m */; };
@@ -57,6 +59,10 @@
 		452B99A311AE3DDC002C0BB3 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		452B9AAA11AE4042002C0BB3 /* CRunLoopHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRunLoopHelper.h; sourceTree = "<group>"; };
 		452B9AAB11AE4042002C0BB3 /* CRunLoopHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRunLoopHelper.m; sourceTree = "<group>"; };
+		4530628312A184D700B99DFA /* CJSONSerializedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializedData.h; sourceTree = "<group>"; };
+		4530628412A184D700B99DFA /* CJSONSerializedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializedData.m; sourceTree = "<group>"; };
+		4530628812A184E400B99DFA /* CTemporaryFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTemporaryFile.h; sourceTree = "<group>"; };
+		4530628912A184E400B99DFA /* CTemporaryFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTemporaryFile.m; sourceTree = "<group>"; };
 		45DF31BB1272EBC900C72889 /* CCouchDBAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCouchDBAttachment.h; sourceTree = "<group>"; };
 		45DF31BC1272EBC900C72889 /* CCouchDBAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCouchDBAttachment.m; sourceTree = "<group>"; };
 		45DF31BD1272EBC900C72889 /* CCouchDBDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCouchDBDatabase.h; sourceTree = "<group>"; };
@@ -178,6 +184,7 @@
 				45DF31E41272EC0C00C72889 /* TouchJSON */,
 			);
 			name = Externals;
+			path = ../../Externals;
 			sourceTree = "<group>";
 		};
 		45DF31BA1272EBC900C72889 /* Source */ = {
@@ -212,9 +219,8 @@
 			children = (
 				45DF330B1272EC0D00C72889 /* Source */,
 			);
-			name = TouchJSON;
-			path = ../../../TouchJSON;
-			sourceTree = SOURCE_ROOT;
+			path = TouchJSON;
+			sourceTree = "<group>";
 		};
 		45DF330B1272EC0D00C72889 /* Source */ = {
 			isa = PBXGroup;
@@ -235,6 +241,8 @@
 				45DF33101272EC0D00C72889 /* CFilteringJSONSerializer.m */,
 				45DF33111272EC0D00C72889 /* CJSONDeserializer_BlocksExtensions.h */,
 				45DF33121272EC0D00C72889 /* CJSONDeserializer_BlocksExtensions.m */,
+				4530628312A184D700B99DFA /* CJSONSerializedData.h */,
+				4530628412A184D700B99DFA /* CJSONSerializedData.m */,
 			);
 			path = Experimental;
 			sourceTree = "<group>";
@@ -273,9 +281,8 @@
 			children = (
 				45DF34441272EC1A00C72889 /* Source */,
 			);
-			name = TouchFoundation;
-			path = ../../../TouchFoundation;
-			sourceTree = SOURCE_ROOT;
+			path = TouchFoundation;
+			sourceTree = "<group>";
 		};
 		45DF34441272EC1A00C72889 /* Source */ = {
 			isa = PBXGroup;
@@ -283,6 +290,8 @@
 				45DF34451272EC1A00C72889 /* Asserts.h */,
 				45DF34591272EC1A00C72889 /* CTemporaryData.h */,
 				45DF345A1272EC1A00C72889 /* CTemporaryData.m */,
+				4530628812A184E400B99DFA /* CTemporaryFile.h */,
+				4530628912A184E400B99DFA /* CTemporaryFile.m */,
 				45DF345D1272EC1A00C72889 /* CURLOperation.h */,
 				45DF345E1272EC1A00C72889 /* CURLOperation.m */,
 				45DF34E11272EC6B00C72889 /* Extensions */,
@@ -409,6 +418,8 @@
 				45DF35311272EC8900C72889 /* NSDate_InternetDateExtensions.m in Sources */,
 				45DF35321272EC8900C72889 /* NSDateFormatter_InternetDateExtensions.m in Sources */,
 				45DF35B81272F10100C72889 /* CContinuousURLOperation.m in Sources */,
+				4530628512A184D700B99DFA /* CJSONSerializedData.m in Sources */,
+				4530628A12A184E400B99DFA /* CTemporaryFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
