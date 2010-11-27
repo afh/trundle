@@ -16,15 +16,15 @@
 @synthesize data;
 
 - (id)initWithIdentifier:(NSString *)inIdentifier contentType:(NSString *)inContentType data:(NSData *)inData;
-{
-if ((self = [super init]) != NULL)
-    {
-    identifier = [inIdentifier retain];
-    contentType = [inContentType retain];
-    data = [inData retain];
-    }
-return(self);
-}
+	{
+	if ((self = [super init]) != NULL)
+		{
+		identifier = [inIdentifier retain];
+		contentType = [inContentType retain];
+		data = [inData retain];
+		}
+	return(self);
+	}
 
 - (void)dealloc
     {

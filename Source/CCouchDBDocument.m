@@ -66,6 +66,15 @@
     return(self);
     }
 
+- (id)initWithDatabase:(CCouchDBDatabase *)inDatabase JSON:(id)inJSON;
+{
+if ((self = [self initWithDatabase:inDatabase]) != NULL)
+	{
+	[self populateWithJSON:inJSON];
+	}
+return(self);
+}
+
 - (void)dealloc
     {
     database = NULL;
@@ -119,7 +128,7 @@
                 [identifier release];
                 identifier = NULL;
                 }
-            
+
             NSMutableDictionary *theContent = [NSMutableDictionary dictionaryWithDictionary:self.content];
             [theContent setObject:inIdentifier forKey:@"_id"];
             self.content = theContent;
@@ -158,7 +167,7 @@
                 [revision release];
                 revision = NULL;
                 }
-            
+
             NSMutableDictionary *theContent = [NSMutableDictionary dictionaryWithDictionary:self.content];
             [theContent setObject:inRevision forKey:@"_rev"];
             self.content = theContent;
@@ -173,9 +182,9 @@
 
 - (NSURL *)URL
     {
-    return([NSURL URLWithString:[NSString stringWithFormat:@"%@/", self.encodedIdentifier] relativeToURL:self.database.URL]);
+    return([self.database.URL URLByAppendingPathComponent:self.encodedIdentifier]);
     }
-    
+
 #pragma mark -
 
 - (CCouchDBSession *)session
@@ -185,12 +194,12 @@
 
 #pragma mark -
 
-- (void)populateWithJSONDictionary:(NSDictionary *)inDictionary
+- (void)populateWithJSON:(id)inDictionary
     {
     self.content = inDictionary;
     }
 
-- (NSDictionary *)asJSONDictionary
+- (id)asJSON
     {
     if (self.content)
         {
@@ -205,13 +214,14 @@
         }
     }
 
+// TODO this is just a quick hack for attachments. Needs a lot more work.
 - (void)addAttachment:(CCouchDBAttachment *)inAttachment
     {
-    NSURL *theURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?rev=%@", inAttachment.identifier, self.revision] relativeToURL:[self.URL absoluteURL]];
+    NSURL *theURL = [[self.URL absoluteURL] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@?rev=%@", inAttachment.identifier, self.revision]];
 
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL];
     theRequest.HTTPMethod = @"PUT";
-
+	[theRequest setValue:kContentTypeJSON forHTTPHeaderField:@"Accept"];
     [theRequest setValue:inAttachment.contentType forHTTPHeaderField:@"Content-Type"];
     [theRequest setHTTPBody:inAttachment.data];
 
@@ -224,16 +234,16 @@
 //                inFailureHandler(theError);
             return;
             }
-            
+
 //        NSString *theIdentifier = [inParameter objectForKey:@"id"];
 //        NSString *theRevision = [inParameter objectForKey:@"rev"];
-        
+
 //        if (inSuccessHandler)
 //            inSuccessHandler(theDocument);
         };
 
 //    return(theOperation);
-    
+
     [self.session.operationQueue addOperation:theOperation];
 
     }

@@ -28,9 +28,10 @@
 - (id)initWithDatabase:(CCouchDBDatabase *)inDatabase;
 - (id)initWithDatabase:(CCouchDBDatabase *)inDatabase identifier:(NSString *)inIdentifier;
 - (id)initWithDatabase:(CCouchDBDatabase *)inDatabase identifier:(NSString *)inIdentifier revision:(NSString *)inRevision;
+- (id)initWithDatabase:(CCouchDBDatabase *)inDatabase JSON:(id)inJSON;
 
-- (void)populateWithJSONDictionary:(NSDictionary *)inDictionary;
-- (NSDictionary *)asJSONDictionary;
+- (void)populateWithJSON:(id)inDictionary;
+- (id)asJSON;
 
 - (void)addAttachment:(CCouchDBAttachment *)inAttachment;
 

@@ -1,5 +1,5 @@
 //
-//  CCouchDBView.h
+//  CCouchDBDesignDocument.h
 //  AnythingBucket
 //
 //  Created by Jonathan Wight on 10/21/10.
@@ -11,8 +11,9 @@
 #import "CouchDBClientTypes.h"
 
 @class CCouchDBDatabase;
+@class CURLOperation;
 
-@interface CCouchDBView : NSObject {
+@interface CCouchDBDesignDocument : NSObject {
     CCouchDBDatabase *database;
     NSString *identifier;
 }
@@ -23,6 +24,6 @@
 
 - (id)initWithDatabase:(CCouchDBDatabase *)inDatabase identifier:(NSString *)inIdentifier;
 
-- (void)fetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
+- (CURLOperation *)operationToFetchViewNamed:(NSString *)inName options:(NSDictionary *)inOptions withSuccessHandler:(CouchDBSuccessHandler)inSuccessHandler failureHandler:(CouchDBFailureHandler)inFailureHandler;
 
 @end
